@@ -1,0 +1,7 @@
+---
+const { frontmatter } = Astro.props;
+import '../styles/global.css';
+---
+<h1>{frontmatter.title}</h1>
+<p>Post Date: {frontmatter.pubDate}</p>
+<slot />
