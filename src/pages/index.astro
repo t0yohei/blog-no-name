@@ -2,13 +2,19 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
+
+const allPosts = await Astro.glob('../pages/posts/*.md');
 ---
 
 <Layout title="Blog No Name">
   <main>
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
-      <Card href="/posts/20230103_new_year" title="2023 New Year" body="2023 年の目標とか" />
+      {
+        allPosts.map((post) => (
+          <Card href={post.url || ''} title={post.frontmatter.title} body={post.frontmatter.description} />
+        ))
+      }
     </ul>
   </main>
 </Layout>
