@@ -4,6 +4,7 @@ html {
 }
 
 body {
+  font-size: 14px;
   margin: 0 auto;
   width: 100%;
   max-width: 80ch;
@@ -11,14 +12,46 @@ body {
   line-height: 1.5;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 main {
   margin: auto;
   padding: 1.5rem;
   max-width: 60ch;
+}
+
+@media screen and (min-width:480px) {
+  body {
+    max-width: 100ch;
+  }
+
+  main {
+    max-width: 80ch;
+  }
+}
+@media screen and (min-width:768px) and ( max-width:1024px) {
+    /*　画面サイズが768pxから1024pxまではここを読み込む　*/
+  body {
+    font-size: 16px;
+    max-width: 120ch;
+  }
+
+  main {
+    max-width: 100ch;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  body {
+    font-size: 16px;
+    max-width: 140ch;
+  }
+
+  main {
+    max-width: 120ch;
+  }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 h1 {
