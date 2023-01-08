@@ -1,14 +1,24 @@
 ---
 const { frontmatter } = Astro.props;
+
+import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 ---
 
-<h1>{frontmatter.title}</h1>
-<p>Post Date: {frontmatter.pubDate}</p>
-<slot />
-<footer><a href="/">ブログ一覧に戻る</a></footer>
+<Layout title={frontmatter.title}>
+  <main>
+    <h1>{frontmatter.title}</h1>
+    <p>Post Date: {frontmatter.pubDate}</p>
+    <slot />
+    <footer><a href="/">ブログ一覧に戻る</a></footer>
+  </main>
+</Layout>
 
 <style>
+  h1 {
+    font-size: 32px;
+  }
+
   footer {
     margin-top: 50px;
   }
