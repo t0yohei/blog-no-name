@@ -2,7 +2,6 @@
 layout: ../../layouts/MarkdownPostLayout.astro
 title: '2023 仕事始め'
 pubDate: '2023-01-04'
-description: '2023 仕事始めの話'
 ---
 
 テスト用に複数の記事が欲しかったので連続投稿。
