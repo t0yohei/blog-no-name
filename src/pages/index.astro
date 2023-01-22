@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import HomeLayout from '../layouts/HomeLayout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
 
@@ -11,7 +11,7 @@ const arrangePreview = (rawContent: string): string => {
 };
 ---
 
-<Layout title="Blog No Name">
+<HomeLayout title="Blog No Name">
   <main>
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
@@ -29,7 +29,7 @@ const arrangePreview = (rawContent: string): string => {
       }
     </ul>
   </main>
-</Layout>
+</HomeLayout>
 
 <style>
   .text-gradient {
