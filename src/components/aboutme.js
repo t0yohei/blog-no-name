@@ -32,9 +32,9 @@ const template = `
         <tr>
           <th class="show">SNS</th>
           <td class="show">
-            <a href="https://twitter.com/${id}"><img src="/twitter.svg" alt="twitter icon" /></a>
-            <a href="https://github.com/${id}"><img src="/github.svg" alt="github icon" /></a>
-            <a href="https://qiita.com/${id}"><img src="/qiita.png" alt="qiita icon" class="sns-icon" /></a>
+            <a href="https://twitter.com/${id}"><img src="/img/twitter.svg" alt="twitter icon" /></a>
+            <a href="https://github.com/${id}"><img src="/img/github.svg" alt="github icon" /></a>
+            <a href="https://qiita.com/${id}"><img src="/img/qiita.png" alt="qiita icon" class="sns-icon" /></a>
           </td>
         </tr>
       </tbody>
