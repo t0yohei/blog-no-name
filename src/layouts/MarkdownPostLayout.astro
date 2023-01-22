@@ -2,7 +2,12 @@
 import Header from '../components/Header.astro';
 import '../styles/global.css';
 
-const { frontmatter } = Astro.props;
+const { frontmatter, rawContent } = Astro.props;
+
+const arrangePreview = (rawContent: string): string => {
+  const headSentence = rawContent.substring(0, 50);
+  return headSentence.replace(/.$/, '...');
+};
 ---
 
 <!DOCTYPE html>
@@ -12,6 +17,12 @@ const { frontmatter } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta property="og:site_name" content="Blog No Name" />
+    <meta property="og:title" content={frontmatter.title} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={`https://blog-no-name.netlify.app${frontmatter.url}`} />
+    <meta property="og:image" content="https://blog-no-name.netlify.app/img/blog-no-name.png" />
+    <meta property="og:description" content={arrangePreview(rawContent())} />
     <title>{frontmatter.title}</title>
   </head>
   <body>
