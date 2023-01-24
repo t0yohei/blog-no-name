@@ -23,6 +23,8 @@ const arrangePreview = (rawContent: string): string => {
     <meta property="og:url" content={`https://blog-no-name.netlify.app${frontmatter.url}`} />
     <meta property="og:image" content="https://blog-no-name.netlify.app/img/blog-no-name.png" />
     <meta property="og:description" content={arrangePreview(rawContent())} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@t0yohei" />
     <title>{frontmatter.title}</title>
   </head>
   <body>
