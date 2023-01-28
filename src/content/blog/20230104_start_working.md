@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: '2023 仕事始め'
 pubDate: '2023-01-04'
 ---

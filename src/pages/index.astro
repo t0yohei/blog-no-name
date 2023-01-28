@@ -2,8 +2,9 @@
 import HomeLayout from '../layouts/HomeLayout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
+import { getCollection } from 'astro:content';
 
-const allPosts = await Astro.glob('../pages/posts/*.md');
+const allPosts = await getCollection('blog');
 
 const arrangePreview = (rawContent: string): string => {
   const headSentence = rawContent.substring(0, 50);
@@ -20,10 +21,10 @@ const arrangePreview = (rawContent: string): string => {
           .reverse()
           .map((post) => (
             <Card
-              href={post.url || ''}
-              title={post.frontmatter.title}
-              body={arrangePreview(post.rawContent())}
-              pubDate={post.frontmatter.pubDate}
+              href={`posts/${post.slug}` || ''}
+              title={post.data.title}
+              body={arrangePreview(post.body)}
+              pubDate={post.data.pubDate}
             />
           ))
       }
