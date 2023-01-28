@@ -59,3 +59,15 @@ h1 {
   font-weight: 800;
   margin: 0;
 }
+
+code {
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+p code {
+  background-color: rgba(175,184,193,0.2);
+  padding: 2px 4px;;
+  font-size: .9em;
+  border-radius: 6px;
+}
