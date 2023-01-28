@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Astro 内で Web components を使用する方法'
 pubDate: '2023-01-08'
 ---

@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: 'ちょっとした更新'
 pubDate: '2023-01-09'
 ---
