@@ -8,10 +8,8 @@ type Props = {
 };
 const { entry } = Astro.props;
 
-const arrangePreview = (rawContent: string): string => {
-  const headSentence = rawContent.substring(0, 50);
-  return headSentence.replace(/.$/, '...');
-};
+const headSentence = entry.body.substring(0, 50);
+const preview = headSentence.replace(/.$/, '...');
 ---
 
 <!DOCTYPE html>
@@ -21,13 +19,13 @@ const arrangePreview = (rawContent: string): string => {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={arrangePreview(entry.body)} />
+    <meta name="description" content={preview} />
     <meta property="og:site_name" content="Blog No Name" />
     <meta property="og:title" content={entry.data.title} />
     <meta property="og:type" content="article" />
     <meta property="og:url" content={`https://blog-no-name.netlify.app/posts/${entry.slug}`} />
     <meta property="og:image" content="https://blog-no-name.netlify.app/img/blog-no-name.png" />
-    <meta property="og:description" content={arrangePreview(entry.body)} />
+    <meta property="og:description" content={preview} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@t0yohei" />
     <title>{entry.data.title}</title>
