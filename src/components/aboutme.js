@@ -6,6 +6,7 @@ const template = `
       <a href="https://twitter.com/${id}">
         <img
           class="twitter-image"
+          alt="Twitter プロフィール画像"
           src="https://pbs.twimg.com/profile_images/731737341488816130/wH_caJBf_400x400.jpg"
         />
       </a>
