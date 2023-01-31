@@ -21,6 +21,7 @@ const arrangePreview = (rawContent: string): string => {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={arrangePreview(entry.body)} />
     <meta property="og:site_name" content="Blog No Name" />
     <meta property="og:title" content={entry.data.title} />
     <meta property="og:type" content="article" />
