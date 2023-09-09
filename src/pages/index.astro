@@ -5,6 +5,11 @@ import '../styles/global.css';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => {
+  const aDate = new Date(a.data.pubDate);
+  const bDate = new Date(b.data.pubDate);
+  return bDate.getTime() - aDate.getTime();
+});
 
 const arrangePreview = (rawContent: string): string => {
   const headSentence = rawContent.substring(0, 50);
@@ -17,16 +22,14 @@ const arrangePreview = (rawContent: string): string => {
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
       {
-        allPosts
-          .reverse()
-          .map((post) => (
-            <Card
-              href={`posts/${post.slug}` || ''}
-              title={post.data.title}
-              body={arrangePreview(post.body)}
-              pubDate={post.data.pubDate}
-            />
-          ))
+        sortedPosts.map((post) => (
+          <Card
+            href={`posts/${post.slug}` || ''}
+            title={post.data.title}
+            body={arrangePreview(post.body)}
+            pubDate={post.data.pubDate}
+          />
+        ))
       }
     </ul>
   </main>
