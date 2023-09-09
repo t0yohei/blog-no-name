@@ -1,7 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import '../styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
+import { ViewTransitions, slide } from 'astro:transitions';
 import type { CollectionEntry } from 'astro:content';
 
 type Props = {
@@ -34,7 +34,7 @@ const preview = headSentence.replace(/.$/, '...');
   </head>
   <body>
     <Header />
-    <main>
+    <main transition:animate={slide({ duration: '0.5s' })}>
       <h1>{entry.data.title}</h1>
       <p>Post Date: {entry.data.pubDate}</p>
       <slot />
