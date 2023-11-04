@@ -8,7 +8,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "textlint": "textlint ./src/content/blog/",
+    "textlint:fix": "textlint --fix ./src/content/blog/"
   },
   "dependencies": {
     "@astrojs/netlify": "^3.0.4",
