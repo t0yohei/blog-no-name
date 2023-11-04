@@ -7,7 +7,16 @@
         "space": "always"
       }
     },
-    "preset-ja-technical-writing": true,
+    "preset-ja-technical-writing": {
+      "sentence-length": {
+        "max": 130
+      },
+      "no-exclamation-question-mark": false,
+      "no-double-negative-ja": false,
+      "ja-no-mixed-period": {
+        "allowPeriodMarks": ["。", "、"]
+      }
+    },
     "spellcheck-tech-word": true
   }
 }
