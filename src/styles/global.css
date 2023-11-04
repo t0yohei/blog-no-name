@@ -19,6 +19,14 @@ main {
   max-width: 60ch;
 }
 
+img {
+  width: 80%;
+  height: auto;
+  margin: auto;
+  display: block;
+  padding: 2rem 0;
+}
+
 @media screen and (min-width:480px) {
   body {
     max-width: 100ch;
