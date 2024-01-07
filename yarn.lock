@@ -4473,6 +4473,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
+squoosh@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/squoosh/-/squoosh-0.0.0.tgz#d2d909442db80019a3e5e5c77a56e0dff3719f34"
+  integrity sha512-KWvhxCF+l5UpV1oyPSZAzscR/skAvlFvcbz3G6Jxp3uNpXzcCLspqApukwFRKbkk4Xpg538rL9Zt/nWTFfP/zw==
+
 stdin-discarder@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/stdin-discarder/-/stdin-discarder-0.1.0.tgz#22b3e400393a8e28ebf53f9958f3880622efde21"
