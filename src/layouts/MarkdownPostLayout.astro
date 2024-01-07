@@ -36,13 +36,26 @@ const preview = headSentence.replace(/.$/, '...');
     <Header />
     <main transition:animate={slide({ duration: '0.5s' })}>
       <h1>{entry.data.title}</h1>
-      <p>Post Date: {entry.data.pubDate}</p>
+      <p>投稿日: {entry.data.pubDate}</p>
       <slot />
       <footer><a href="/">ブログ一覧に戻る</a></footer>
     </main>
     <style>
+      main {
+        background-color: #ffffff;
+        margin-top: 40px;
+        border-radius: 8px;
+      }
+
       h1 {
         font-size: 32px;
+        word-break: break-all;
+        line-height: 1.4;
+      }
+
+      p {
+        color: #65717b;
+        text-align: right;
       }
 
       footer {

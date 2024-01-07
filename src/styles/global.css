@@ -48,7 +48,7 @@ body {
 
 main {
   margin: auto;
-  padding: 0.5rem;
+  padding: 24px 20px;
   line-height: 1.8;
   color: #000000d1;
 
@@ -73,6 +73,7 @@ main {
 
   main {
     max-width: 100ch;
+    padding: 40px 56px;
   }
 }
 
@@ -84,5 +85,6 @@ main {
 
   main {
     max-width: 120ch;
+    padding: 40px 56px;
   }
 }
