@@ -1,0 +1,50 @@
+---
+import HomeLayout from '../layouts/HomeLayout.astro';
+import '../styles/global.css';
+---
+
+<script>
+  import '../components/aboutme.js';
+</script>
+
+<HomeLayout title="App">
+  <main>
+    <h1>App</h1>
+    <h2>Ruby Quize at RubyKaigi 2024</h2>
+    <p>RubyKaigi2024 用に作成した Ruby に関するクイズアプリ</p>
+    <ul>
+      <li><b>ページ:</b>
+        <ul>
+          <li><a href="https://wasm-ruby-question-rubykaigi2024.netlify.app/">Ruby Quize at RubyKaigi 2024</a></li>
+        </ul>
+      </li>
+      <li><b>リポジトリ:</b>
+        <ul>
+          <li><a href="https://github.com/t0yohei/wasm-ruby-question-rubykaigi2024">wasm-ruby-question-rubykaigi2024</a></li>
+        </ul>
+      </li>
+      <li><b>ブログ:</b>
+        <ul>
+          <li><a href="https://engineer.crowdworks.jp/entry/2024/05/15/094311/">RubyKaigi 2024 のブースコンテンツ用に ruby.wasm を使用したクイズアプリを作成しました</a></li>
+        </ul>
+      </li>
+
+      <img src="/img/RubyQuize_at_RubyKaigi2024.png" alt="Ruby Quize at RubyKaigi 2024のトップページ">
+    </ul>
+
+  </main>
+</HomeLayout>
+
+<style>
+ul {
+  padding-left: 24px;
+}
+
+/*　画面サイズが 480 px 〜  はここを読み込む(mini Tablet 以降想定)　*/
+@media screen and (min-width:480px) {
+  li {
+    font-size: 1.1em;
+  }
+}
+
+</style>
