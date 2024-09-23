@@ -1,4 +1,4 @@
-import { defineConfig, squooshImageService } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 import vue from '@astrojs/vue';
@@ -11,7 +11,4 @@ export default defineConfig({
   integrations: [vue()],
   output: 'server',
   adapter: netlify(),
-  image: {
-    service: squooshImageService(),
-  },
 });
