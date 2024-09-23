@@ -4,7 +4,7 @@ import { defineConfig, squooshImageService } from 'astro/config';
 import vue from '@astrojs/vue';
 
 // https://astro.build/config
-import netlify from '@astrojs/netlify/functions';
+import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
