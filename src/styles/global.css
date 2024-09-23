@@ -33,6 +33,11 @@ p code {
   border-radius: 6px;
 }
 
+pre code {
+  display: block;
+  min-width: 100%;
+  padding: 0.5rem 1rem;
+}
 
 /*　画面サイズが 479 px 以下はここを読み込む(SP 想定)　*/
 body {
