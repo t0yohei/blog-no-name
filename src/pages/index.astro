@@ -24,9 +24,9 @@ const arrangePreview = (rawContent: string): string => {
       {
         sortedPosts.map((post) => (
           <Card
-            href={`posts/${post.slug}` || ''}
+            href={`posts/${post.id}` || ''}
             title={post.data.title}
-            body={arrangePreview(post.body)}
+            body={arrangePreview(post.body || '')}
             pubDate={post.data.pubDate}
           />
         ))

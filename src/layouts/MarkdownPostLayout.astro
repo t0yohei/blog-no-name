@@ -1,7 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import '../styles/global.css';
-import { ViewTransitions, slide } from 'astro:transitions';
+import { ClientRouter, slide } from 'astro:transitions';
 import type { CollectionEntry } from 'astro:content';
 
 type Props = {
@@ -9,8 +9,8 @@ type Props = {
 };
 const { entry } = Astro.props;
 
-const headSentence = entry.body.substring(0, 50);
-const preview = headSentence.replace(/.$/, '...');
+const headSentence = entry.body?.substring(0, 50);
+const preview = headSentence?.replace(/.$/, '...') || '';
 ---
 
 <!doctype html>
@@ -24,13 +24,13 @@ const preview = headSentence.replace(/.$/, '...');
     <meta property="og:site_name" content="Blog No Name" />
     <meta property="og:title" content={entry.data.title} />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content={`https://blog-no-name.com/posts/${entry.slug}`} />
+    <meta property="og:url" content={`https://blog-no-name.com/posts/${entry.id}`} />
     <meta property="og:image" content="https://blog-no-name.com/img/blog-no-name.png" />
     <meta property="og:description" content={preview} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@t0yohei" />
     <title>{entry.data.title}</title>
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body>
     <Header />
