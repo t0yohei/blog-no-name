@@ -9,8 +9,8 @@ type Props = {
 };
 const { entry } = Astro.props;
 
-const headSentence = entry.body.substring(0, 50);
-const preview = headSentence.replace(/.$/, '...');
+const headSentence = entry.body?.substring(0, 50);
+const preview = headSentence?.replace(/.$/, '...') || '';
 ---
 
 <!doctype html>

@@ -26,7 +26,7 @@ const arrangePreview = (rawContent: string): string => {
           <Card
             href={`posts/${post.id}` || ''}
             title={post.data.title}
-            body={arrangePreview(post.body)}
+            body={arrangePreview(post.body || '')}
             pubDate={post.data.pubDate}
           />
         ))
