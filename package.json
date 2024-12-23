@@ -13,15 +13,16 @@
     "textlint:fix": "textlint --fix ./src/content/blog/"
   },
   "dependencies": {
-    "@astrojs/netlify": "^5.5.3",
-    "@astrojs/vue": "^4.5.1",
-    "astro": "^4.15.9",
+    "@astrojs/netlify": "^6.0.1",
+    "@astrojs/vue": "^5.0.3",
+    "astro": "^5.1.1",
     "prettier-plugin-astro": "^0.14.1",
-    "textlint": "^14.2.0",
+    "textlint": "^14.4.0",
     "textlint-rule-preset-ja-spacing": "^2.4.3",
     "textlint-rule-preset-ja-technical-writing": "^10.0.1",
     "textlint-rule-spellcheck-tech-word": "^5.0.0",
-    "typescript": "^5.6.2",
-    "vue": "^3.5.10"
-  }
+    "typescript": "^5.7.2",
+    "vue": "^3.5.13"
+  },
+  "packageManager": "yarn@4.5.3"
 }
