@@ -1,0 +1,19 @@
+---
+import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
+import { getEntry, render } from 'astro:content';
+
+// 1. Get the id from the incoming server request
+const { id } = Astro.params;
+if (id === undefined) return;
+
+// 2. Query for the entry directly using the request id
+const entry = await getEntry('blog', id);
+if (entry === undefined) return;
+
+// 3. render the entry to HTML in the template
+const { Content } = await render(entry);
+---
+
+<MarkdownPostLayout entry={entry}>
+  <Content />
+</MarkdownPostLayout>
