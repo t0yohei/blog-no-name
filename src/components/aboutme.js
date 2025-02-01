@@ -11,7 +11,7 @@ const template = `
         />
       </a>
       <div class="top">
-        <h1><span>とよへい</span></h1>
+        <h1><span>とよへい(t0yohei)</span></h1>
         <p>Software Engineer</p>
       </div>
     </div>
@@ -19,22 +19,26 @@ const template = `
     <table class="profile-table">
       <tbody>
         <tr>
-          <th class="show">好きな言語 / FW</th>
-          <td class="show"><p>Ruby, Rails, Vue.js</p></td>
+          <th>好きな言語</th>
+          <td><p>Ruby, JavaScript, TypeScript</p></td>
         </tr>
         <tr>
-          <th class="show">好きな物</th>
-          <td class="show"><p>アニメ、コーヒー</p></td>
+          <th>好きなフレームワーク</th>
+          <td><p>Ruby on Rails, Vue.js, React, Astro</p></td>
         </tr>
         <tr>
-          <th class="show">住処</th>
-          <td class="show"><p>東京周辺</p></td>
+          <th>好きな物</th>
+          <td><p>アニメ、コーヒー</p></td>
         </tr>
         <tr>
-          <th class="show">SNS</th>
-          <td class="show">
-            <a href="https://twitter.com/${id}"><img src="/img/twitter.svg" alt="twitter icon" /></a>
-            <a href="https://github.com/${id}"><img src="/img/github.svg" alt="github icon" /></a>
+          <th>住処</th>
+          <td><p>東京周辺</p></td>
+        </tr>
+        <tr>
+          <th>SNS</th>
+          <td class="sns-icons">
+            <a href="https://x.com/${id}"><img src="/img/x-b.png" alt="x icon" class="sns-icon" /></a>
+            <a href="https://github.com/${id}"><img src="/img/github.svg" alt="github icon"/></a>
             <a href="https://qiita.com/${id}"><img src="/img/qiita.png" alt="qiita icon" class="sns-icon" /></a>
           </td>
         </tr>
@@ -70,10 +74,16 @@ const template = `
     text-align: left;
   }
 
+  .sns-icons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
   .sns-icon {
-    width: 43px;
-    height: 43px;
-    margin: 2px
+    width: 40px;
+    height: 40px;
   }
   </style>
 `;
