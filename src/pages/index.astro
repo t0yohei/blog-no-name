@@ -6,8 +6,8 @@ import { getCollection } from 'astro:content';
 
 const allBlogs = await getCollection('blogs');
 const sortedBlogs = allBlogs.sort((a, b) => {
-  const aDate = new Date(a.data.pubDate);
-  const bDate = new Date(b.data.pubDate);
+  const aDate = new Date(a.data.pubdate);
+  const bDate = new Date(b.data.pubdate);
   return bDate.getTime() - aDate.getTime();
 });
 
@@ -27,7 +27,7 @@ const arrangePreview = (rawContent: string): string => {
             href={`blogs/${blog.id}` || ''}
             title={blog.data.title}
             body={arrangePreview(blog.body || '')}
-            pubDate={blog.data.pubDate}
+            pubdate={blog.data.pubdate}
           />
         ))
       }

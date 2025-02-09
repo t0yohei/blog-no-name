@@ -2,11 +2,11 @@
 export interface Props {
   title: string;
   body: string;
-  pubDate: string;
+  pubdate: string;
   href: string;
 }
 
-const { href, title, body, pubDate } = Astro.props;
+const { href, title, body, pubdate } = Astro.props;
 ---
 
 <li class="link-card">
@@ -19,7 +19,7 @@ const { href, title, body, pubDate } = Astro.props;
       {body}
     </p>
     <p class="pub-date">
-      {pubDate}
+      {pubdate}
     </p>
   </a>
 </li>
