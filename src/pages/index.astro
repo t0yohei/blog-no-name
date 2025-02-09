@@ -4,8 +4,8 @@ import Card from '../components/Card.astro';
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
 
-const allPosts = await getCollection('blog');
-const sortedPosts = allPosts.sort((a, b) => {
+const allBlogs = await getCollection('blogs');
+const sortedBlogs = allBlogs.sort((a, b) => {
   const aDate = new Date(a.data.pubDate);
   const bDate = new Date(b.data.pubDate);
   return bDate.getTime() - aDate.getTime();
@@ -22,12 +22,12 @@ const arrangePreview = (rawContent: string): string => {
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
       {
-        sortedPosts.map((post) => (
+        sortedBlogs.map((blog) => (
           <Card
-            href={`posts/${post.id}` || ''}
-            title={post.data.title}
-            body={arrangePreview(post.body || '')}
-            pubDate={post.data.pubDate}
+            href={`blogs/${blog.id}` || ''}
+            title={blog.data.title}
+            body={arrangePreview(blog.body || '')}
+            pubDate={blog.data.pubDate}
           />
         ))
       }
