@@ -2,11 +2,11 @@
 export interface Props {
   title: string;
   body: string;
-  pubDate: string;
+  pubdate: string;
   href: string;
 }
 
-const { href, title, body, pubDate } = Astro.props;
+const { href, title, body, pubdate } = Astro.props;
 ---
 
 <li class="link-card">
@@ -15,11 +15,11 @@ const { href, title, body, pubDate } = Astro.props;
       {title}
       <span>&rarr;</span>
     </h2>
-    <p class="post-body">
+    <p class="blog-body">
       {body}
     </p>
     <p class="pub-date">
-      {pubDate}
+      {pubdate}
     </p>
   </a>
 </li>
@@ -58,7 +58,7 @@ const { href, title, body, pubDate } = Astro.props;
     margin-bottom: 0;
     color: #444;
   }
-  .post-body {
+  .blog-body {
     font-size: 1.1rem;
     margin-bottom: 1rem;
   }

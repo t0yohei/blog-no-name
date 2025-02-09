@@ -5,7 +5,7 @@ import { ClientRouter, slide } from 'astro:transitions';
 import type { CollectionEntry } from 'astro:content';
 
 type Props = {
-  entry: CollectionEntry<'blog'>;
+  entry: CollectionEntry<'blogs'>;
 };
 const { entry } = Astro.props;
 
@@ -24,7 +24,7 @@ const preview = headSentence?.replace(/.$/, '...') || '';
     <meta property="og:site_name" content="Blog No Name" />
     <meta property="og:title" content={entry.data.title} />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content={`https://blog-no-name.com/posts/${entry.id}`} />
+    <meta property="og:url" content={`https://blog-no-name.com/blogs/${entry.id}`} />
     <meta property="og:image" content="https://blog-no-name.com/img/blog-no-name.png" />
     <meta property="og:description" content={preview} />
     <meta name="twitter:card" content="summary_large_image" />
@@ -36,7 +36,7 @@ const preview = headSentence?.replace(/.$/, '...') || '';
     <Header />
     <main transition:animate={slide({ duration: '0.5s' })}>
       <h1>{entry.data.title}</h1>
-      <p>投稿日: {entry.data.pubDate}</p>
+      <p>投稿日: {entry.data.pubdate.toISOString().slice(0, 10)}</p>
       <slot />
       <footer><a href="/">ブログ一覧に戻る</a></footer>
     </main>
