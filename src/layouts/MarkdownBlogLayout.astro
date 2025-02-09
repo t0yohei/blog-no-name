@@ -36,7 +36,7 @@ const preview = headSentence?.replace(/.$/, '...') || '';
     <Header />
     <main transition:animate={slide({ duration: '0.5s' })}>
       <h1>{entry.data.title}</h1>
-      <p>投稿日: {entry.data.pubdate}</p>
+      <p>投稿日: {entry.data.pubdate.toISOString().slice(0, 10)}</p>
       <slot />
       <footer><a href="/">ブログ一覧に戻る</a></footer>
     </main>
