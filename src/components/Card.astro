@@ -30,6 +30,8 @@ const getPostHref = (): string => {
           <Icon class="icon" name="speakerdeck" />
         ) : post.collection === 'qiitas' ? (
           <Image src={QiitaIcon} alt="Qiita" class="icon" />
+        ) : post.collection === 'zenns' ? (
+          <Icon class="icon" name="zenn" />
         ) : (
           <Icon size={20} class="icon" name="mdi:file-document" />
         )
