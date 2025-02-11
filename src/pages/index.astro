@@ -11,7 +11,8 @@ const buildPosts = async (): Promise<Post[]> => {
     const slides = (await getCollection('slides')) as Post[];
     const qiitas = (await getCollection('qiitas')) as Post[];
     const zenns = (await getCollection('zenns')) as Post[];
-    return [...blogs, ...slides, ...qiitas, ...zenns];
+    const devTos = (await getCollection('devTos')) as Post[];
+    return [...blogs, ...slides, ...qiitas, ...zenns, ...devTos];
   };
 
   const sortPostsByDate = (posts: Post[]): Post[] => {

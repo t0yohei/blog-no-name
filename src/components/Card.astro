@@ -32,6 +32,8 @@ const getPostHref = (): string => {
           <Image src={QiitaIcon} alt="Qiita" class="icon" />
         ) : post.collection === 'zenns' ? (
           <Icon class="icon" name="zenn" />
+        ) : post.collection === 'devTos' ? (
+          <Icon class="icon" name="devTo" />
         ) : (
           <Icon size={20} class="icon" name="mdi:file-document" />
         )
@@ -40,10 +42,10 @@ const getPostHref = (): string => {
     <h2>{post.data.title ?? ''}</h2>
     <span class="link-icon-container">
       {
-        post.collection === 'slides' || post.collection === 'qiitas' ? (
-          <Icon class="icon" name="mdi:external-link" />
-        ) : (
+        post.collection === 'blogs' ? (
           <Icon class="icon" name="mdi:arrow-right" />
+        ) : (
+          <Icon class="icon" name="mdi:external-link" />
         )
       }
     </span>
