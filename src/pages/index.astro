@@ -3,20 +3,25 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
+import { type Post } from '../model';
 
-const blogs = await getCollection('blogs');
-const slides = await getCollection('slides');
-const allPosts = [...blogs, ...slides];
+const buildPosts = async (): Promise<Post[]> => {
+  const getAllPosts = async (): Promise<Post[]> => {
+    const blogs = await getCollection('blogs') as Post[];
+    const slides = await getCollection('slides') as Post[];
+    return [...blogs, ...slides];
+  }
 
-const sortedPosts = allPosts.sort((a, b) => {
-  return (b.data.pubdate?.getTime() ?? 0) - (a.data.pubdate?.getTime() ?? 0);
-});
+  const sortPostsByDate = (posts: Post[]): Post[] => {
+    return posts.sort((a, b) => {
+      return (b.data.pubdate?.getTime() ?? 0) - (a.data.pubdate?.getTime() ?? 0);
+    });
+  }
 
-const arrangePreview = (rawContent?: string): string => {
-  if (!rawContent) return '';
-  const headSentence = rawContent.substring(0, 50);
-  return headSentence.replace(/.$/, '...');
+  return sortPostsByDate(await getAllPosts());
 };
+
+const posts = await buildPosts();
 ---
 
 <HomeLayout title="Blog No Name">
@@ -24,13 +29,8 @@ const arrangePreview = (rawContent?: string): string => {
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
       {
-        sortedPosts.map((post) => (
-          <Card
-            href={post.collection === 'blogs' ? `blogs/${post.id}` : post.data.link ?? ''}
-            title={post.data.title ?? ''}
-            body={arrangePreview(post.collection === 'blogs' ? post.body : post.data.summary ?? '')}
-            pubdate={post.data.pubdate?.toISOString().slice(0, 10) ?? ''}
-          />
+        posts.map((post) => (
+          <Card post={post} />
         ))
       }
     </ul>
