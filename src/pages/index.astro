@@ -22,19 +22,6 @@ const buildPosts = async (): Promise<Post[]> => {
 };
 
 const posts = await buildPosts();
-
-const createPreview = (content?: string): string => {
-  if (!content) return '';
-  return content.substring(0, 50).replace(/.$/, '...');
-};
-
-const getPostContent = (post: Post): string => {
-  return post.collection === 'blogs' ? post.body ?? '' : post.data.summary ?? '';
-};
-
-const getPostHref = (post: Post): string => {
-  return post.collection === 'blogs' ? `blogs/${post.id}` : post.data.link ?? '';
-};
 ---
 
 <HomeLayout title="Blog No Name">
@@ -43,12 +30,7 @@ const getPostHref = (post: Post): string => {
     <ul role="list" class="link-card-grid">
       {
         posts.map((post) => (
-          <Card
-            href={getPostHref(post)}
-            title={post.data.title ?? ''}
-            body={createPreview(getPostContent(post))}
-            pubdate={post.data.pubdate?.toISOString().slice(0, 10) ?? ''}
-          />
+          <Card post={post} />
         ))
       }
     </ul>
