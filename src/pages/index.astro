@@ -4,18 +4,47 @@ import Card from '../components/Card.astro';
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
 
-const blogs = await getCollection('blogs');
-const slides = await getCollection('slides');
-const allPosts = [...blogs, ...slides];
+interface Post {
+  collection: string;
+  id: string;
+  data: {
+    title?: string;
+    pubdate?: Date;
+    link?: string;
+    summary?: string;
+  };
+  body?: string;
+}
 
-const sortedPosts = allPosts.sort((a, b) => {
-  return (b.data.pubdate?.getTime() ?? 0) - (a.data.pubdate?.getTime() ?? 0);
-});
+const buildPosts = async (): Promise<Post[]> => {
+  const getAllPosts = async (): Promise<Post[]> => {
+    const blogs = await getCollection('blogs') as Post[];
+    const slides = await getCollection('slides') as Post[];
+    return [...blogs, ...slides];
+  }
 
-const arrangePreview = (rawContent?: string): string => {
-  if (!rawContent) return '';
-  const headSentence = rawContent.substring(0, 50);
-  return headSentence.replace(/.$/, '...');
+  const sortPostsByDate = (posts: Post[]): Post[] => {
+    return posts.sort((a, b) => {
+      return (b.data.pubdate?.getTime() ?? 0) - (a.data.pubdate?.getTime() ?? 0);
+    });
+  }
+
+  return sortPostsByDate(await getAllPosts());
+};
+
+const posts = await buildPosts();
+
+const createPreview = (content?: string): string => {
+  if (!content) return '';
+  return content.substring(0, 50).replace(/.$/, '...');
+};
+
+const getPostContent = (post: Post): string => {
+  return post.collection === 'blogs' ? post.body ?? '' : post.data.summary ?? '';
+};
+
+const getPostHref = (post: Post): string => {
+  return post.collection === 'blogs' ? `blogs/${post.id}` : post.data.link ?? '';
 };
 ---
 
@@ -24,11 +53,11 @@ const arrangePreview = (rawContent?: string): string => {
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
       {
-        sortedPosts.map((post) => (
+        posts.map((post) => (
           <Card
-            href={post.collection === 'blogs' ? `blogs/${post.id}` : post.data.link ?? ''}
+            href={getPostHref(post)}
             title={post.data.title ?? ''}
-            body={arrangePreview(post.collection === 'blogs' ? post.body : post.data.summary ?? '')}
+            body={createPreview(getPostContent(post))}
             pubdate={post.data.pubdate?.toISOString().slice(0, 10) ?? ''}
           />
         ))
