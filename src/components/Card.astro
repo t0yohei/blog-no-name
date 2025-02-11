@@ -1,6 +1,8 @@
 ---
 import { type Post } from '../model';
-import { Icon } from 'astro-icon/components'
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import QiitaIcon from '../icons/qiita.png';
 
 export interface Props {
   post: Post;
@@ -9,25 +11,39 @@ export interface Props {
 const { post } = Astro.props;
 
 const createPreview = (): string => {
-  const content = post.collection === 'blogs' ? post.body ?? '' : post.data.summary ?? '';
+  const content = post.body || post.data.description || '';
 
   if (!content) return '';
   return content.substring(0, 50).replace(/.$/, '...');
 };
 
 const getPostHref = (): string => {
-  return post.collection === 'blogs' ? `blogs/${post.id}` : post.data.link ?? '';
+  return post.collection === 'blogs' ? `blogs/${post.id}` : (post.data.link ?? '');
 };
 ---
 
 <li class="link-card">
   <a href={getPostHref()}>
     <span class="icon-container">
-      {post.collection === 'slides' ? <Icon class="icon" name="speakerdeck"/> : <Icon size={20} class="icon" name="mdi:file-document" />}
+      {
+        post.collection === 'slides' ? (
+          <Icon class="icon" name="speakerdeck" />
+        ) : post.collection === 'qiitas' ? (
+          <Image src={QiitaIcon} alt="Qiita" class="icon" />
+        ) : (
+          <Icon size={20} class="icon" name="mdi:file-document" />
+        )
+      }
     </span>
     <h2>{post.data.title ?? ''}</h2>
     <span class="link-icon-container">
-      {post.collection === 'slides' ?  <Icon class="icon" name="mdi:external-link" /> :<Icon class="icon" name="mdi:arrow-right" />}
+      {
+        post.collection === 'slides' || post.collection === 'qiitas' ? (
+          <Icon class="icon" name="mdi:external-link" />
+        ) : (
+          <Icon class="icon" name="mdi:arrow-right" />
+        )
+      }
     </span>
     <p class="blog-body">
       {createPreview()}
@@ -47,7 +63,9 @@ const getPostHref = (): string => {
     border-radius: 0.5rem;
     background-position: 100%;
     transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -2px rgba(0, 0, 0, 0.1);
     position: relative;
   }
 
@@ -74,7 +92,7 @@ const getPostHref = (): string => {
 
   .blog-body {
     font-size: 1.1rem;
-    padding: 0.5rem 1rem 2rem;
+    padding: 0.5rem 1.5rem 2rem;
   }
 
   .icon-container {
@@ -102,6 +120,8 @@ const getPostHref = (): string => {
   .icon {
     width: 20px;
     height: 20px;
+    padding: 0;
+    margin: 0;
   }
 
   .link-card:is(:hover, :focus-within) h2 {

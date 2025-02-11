@@ -9,7 +9,8 @@ const buildPosts = async (): Promise<Post[]> => {
   const getAllPosts = async (): Promise<Post[]> => {
     const blogs = await getCollection('blogs') as Post[];
     const slides = await getCollection('slides') as Post[];
-    return [...blogs, ...slides];
+    const qiitas = await getCollection('qiitas') as Post[];
+    return [...blogs, ...slides, ...qiitas];
   }
 
   const sortPostsByDate = (posts: Post[]): Post[] => {
