@@ -1,5 +1,6 @@
 ---
 import { type Post } from '../model';
+import { Icon } from 'astro-icon/components'
 
 export interface Props {
   post: Post;
@@ -22,8 +23,9 @@ const getPostHref = (): string => {
 <li class="link-card">
   <a href={getPostHref()}>
     <h2>
-      {post.data.title ?? ''}
-      <span>&rarr;</span>
+      {post.collection === 'slides' ? <Icon class="icon" name="speakerdeck" /> : <Icon class="icon" name="mdi:file-document" />}
+      <span>{post.data.title ?? ''}</span>
+      {post.collection === 'slides' ?  <Icon class="icon" name="mdi:external-link" /> :<Icon class="icon" name="mdi:arrow-right" />}
     </h2>
     <p class="blog-body">
       {createPreview()}
@@ -37,7 +39,6 @@ const getPostHref = (): string => {
   .link-card {
     list-style: none;
     display: flex;
-    padding: 0.15rem;
     background-color: white;
     background-image: var(--accent-gradient);
     background-size: 400%;
@@ -52,7 +53,7 @@ const getPostHref = (): string => {
     width: 100%;
     text-decoration: none;
     line-height: 1.4;
-    padding: 1rem 1.3rem;
+    padding: 1rem;
     border-radius: 0.35rem;
     color: #111;
     background-color: white;
@@ -62,24 +63,36 @@ const getPostHref = (): string => {
     margin: 0;
     font-size: 1.25rem;
     transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    display: grid;
+    grid-template-columns: 20px 1fr 20px;
+    align-items: start;
+    gap: 0.5rem;
   }
+
+  .icon {
+    margin-top: 0.25rem;
+  }
+
   p {
-    margin-top: 0.5rem;
-    margin-bottom: 0;
+    margin: 0;
     color: #444;
   }
+
   .blog-body {
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    padding: 1.0rem;
   }
+
   .pub-date {
     position: absolute;
     right: 15px;
     bottom: 10px;
   }
+
   .link-card:is(:hover, :focus-within) {
     background-position: 0;
   }
+
   .link-card:is(:hover, :focus-within) h2 {
     color: rgb(var(--accent));
   }
