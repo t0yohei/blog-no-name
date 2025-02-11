@@ -6,9 +6,11 @@ import vue from '@astrojs/vue';
 // https://astro.build/config
 import netlify from '@astrojs/netlify';
 
+import icon from 'astro-icon';
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [vue()],
+  integrations: [vue(), icon()],
   output: 'server',
   adapter: netlify(),
 });
