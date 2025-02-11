@@ -3,18 +3,7 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
-
-interface Post {
-  collection: string;
-  id: string;
-  data: {
-    title?: string;
-    pubdate?: Date;
-    link?: string;
-    summary?: string;
-  };
-  body?: string;
-}
+import { type Post } from '../model';
 
 const buildPosts = async (): Promise<Post[]> => {
   const getAllPosts = async (): Promise<Post[]> => {
