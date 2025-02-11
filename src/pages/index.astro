@@ -7,16 +7,19 @@ import { type Post } from '../model';
 
 const buildPosts = async (): Promise<Post[]> => {
   const getAllPosts = async (): Promise<Post[]> => {
-    const blogs = await getCollection('blogs') as Post[];
-    const slides = await getCollection('slides') as Post[];
-    return [...blogs, ...slides];
-  }
+    const blogs = (await getCollection('blogs')) as Post[];
+    const slides = (await getCollection('slides')) as Post[];
+    const qiitas = (await getCollection('qiitas')) as Post[];
+    const zenns = (await getCollection('zenns')) as Post[];
+    const devTos = (await getCollection('devTos')) as Post[];
+    return [...blogs, ...slides, ...qiitas, ...zenns, ...devTos];
+  };
 
   const sortPostsByDate = (posts: Post[]): Post[] => {
     return posts.sort((a, b) => {
       return (b.data.pubdate?.getTime() ?? 0) - (a.data.pubdate?.getTime() ?? 0);
     });
-  }
+  };
 
   return sortPostsByDate(await getAllPosts());
 };
@@ -28,11 +31,7 @@ const posts = await buildPosts();
   <main>
     <h1>Blog <span class="text-gradient">No Name</span></h1>
     <ul role="list" class="link-card-grid">
-      {
-        posts.map((post) => (
-          <Card post={post} />
-        ))
-      }
+      {posts.map((post) => <Card post={post} />)}
     </ul>
   </main>
 </HomeLayout>

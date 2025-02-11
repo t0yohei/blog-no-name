@@ -18,9 +18,30 @@ const slides = defineCollection({
   }),
 });
 
+const qiitas = defineCollection({
+  loader: feedLoader({
+    url: 'http://qiita.com/t0yohei/feed.atom',
+  }),
+});
+
+const zenns = defineCollection({
+  loader: feedLoader({
+    url: 'https://zenn.dev/t0yohei/feed',
+  }),
+});
+
+const devTos = defineCollection({
+  loader: feedLoader({
+    url: 'https://dev.to/feed/t0yohei',
+  }),
+});
+
 // 3. Export a single `collections` object to register your collection(s)
 //    This key should match your collection directory name in "src/content"
 export const collections = {
   blogs,
   slides,
+  qiitas,
+  zenns,
+  devTos,
 };
