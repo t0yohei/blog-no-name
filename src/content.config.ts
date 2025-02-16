@@ -20,7 +20,7 @@ const slides = defineCollection({
 
 const qiitas = defineCollection({
   loader: qiitaLoader({
-    url: 'https://qiita.com/api/v2/users/t0yohei/itemss',
+    url: 'https://qiita.com/api/v2/users/t0yohei/items',
   }),
 });
 

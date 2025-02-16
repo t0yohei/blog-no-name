@@ -2,7 +2,7 @@ import type { Loader } from 'astro/loaders';
 import { z } from 'astro:content';
 
 const schema = z.object({
-  rendered_body: z.string(),
+  rendered_body: z.string().nullable(),
   body: z.string(),
   coediting: z.boolean(),
   comments_count: z.number(),
@@ -25,7 +25,7 @@ const schema = z.object({
   tags: z.array(
     z.object({
       name: z.string(),
-      versions: z.array(z.string()),
+      versions: z.array(z.string()).nullable(),
     }),
   ),
   title: z.string(),
@@ -55,7 +55,7 @@ const schema = z.object({
       name: z.string(),
     })
     .nullable(),
-  organization_url_name: z.string().nullable(),
+  organization_url_name: z.string().nullable().optional(),
   slide: z.boolean(),
 });
 
@@ -75,17 +75,19 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
 
       const data = await response.json();
 
-      const parsedData = await parseData({
-        id: data.id,
-        data: data,
-      });
+      data.forEach(async (item: any) => {
+        const parsedData = await parseData({
+          id: item.id,
+          data: item,
+        });
 
-      store.set({
-        id: parsedData.id,
-        data: parsedData,
-        rendered: {
-          html: parsedData.body,
-        },
+        store.set({
+          id: parsedData.id,
+          data: parsedData,
+          rendered: {
+            html: parsedData.body,
+          },
+        });
       });
     },
     schema: schema,
