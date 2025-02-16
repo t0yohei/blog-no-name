@@ -6,6 +6,7 @@ export type Post = {
     pubdate?: Date;
     link?: string;
     description?: string;
+    body?: string;
   };
   body?: string;
 };
