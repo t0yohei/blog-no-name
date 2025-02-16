@@ -10,17 +10,15 @@ export interface Props {
 
 const { post } = Astro.props;
 
-const buildPreview = (text: string, size: number = 50): string => {
-  if (!text) return '';
-  return text.length > size ? text.substring(0, size).replace(/.$/, '...') : text;
+const createPreview = (): string => {
+  const content = post.body || post.data.description || '';
+
+  if (!content) return '';
+  return content.substring(0, 50).replace(/.$/, '...');
 };
 
 const getPostHref = (): string => {
-  return post.collection === 'blogs'
-    ? `blogs/${post.id}`
-    : post.collection === 'qiitas'
-      ? (post.data.url ?? '')
-      : (post.data.link ?? '');
+  return post.collection === 'blogs' ? `blogs/${post.id}` : (post.data.link ?? '');
 };
 ---
 
@@ -41,7 +39,7 @@ const getPostHref = (): string => {
         )
       }
     </span>
-    <h2>{buildPreview(post.data.title ?? '', 80)}</h2>
+    <h2>{post.data.title ?? ''}</h2>
     <span class="link-icon-container">
       {
         post.collection === 'blogs' ? (
@@ -52,7 +50,7 @@ const getPostHref = (): string => {
       }
     </span>
     <p class="blog-body">
-      {buildPreview(post.body || post.data.body || post.data.description || '')}
+      {createPreview()}
     </p>
     <p class="pub-date">
       {post.data.pubdate?.toISOString().slice(0, 10) ?? ''}
