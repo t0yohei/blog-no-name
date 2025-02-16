@@ -2,8 +2,8 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { feedLoader } from '@ascorbic/feed-loader';
+import { qiitaLoader } from './loader';
 
-// 2. Define your collection(s)
 const blogs = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/content/blog' }),
   schema: z.object({
@@ -19,8 +19,8 @@ const slides = defineCollection({
 });
 
 const qiitas = defineCollection({
-  loader: feedLoader({
-    url: 'http://qiita.com/t0yohei/feed',
+  loader: qiitaLoader({
+    url: 'https://qiita.com/api/v2/users/t0yohei/items',
   }),
 });
 
