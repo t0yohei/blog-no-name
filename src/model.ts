@@ -7,6 +7,7 @@ export type Post = {
     link?: string;
     description?: string;
     body?: string;
+    url?: string;
   };
   body?: string;
 };
