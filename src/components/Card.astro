@@ -1,5 +1,5 @@
 ---
-import { type Post } from '../model';
+import { parseDate, parseDescription, type Post } from '../model';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import QiitaIcon from '../icons/qiita.png';
@@ -52,10 +52,10 @@ const getPostHref = (): string => {
       }
     </span>
     <p class="blog-body">
-      {buildPreview(post.body || post.data.body || post.data.description || '')}
+      {buildPreview(parseDescription(post) ?? '')}
     </p>
     <p class="pub-date">
-      {post.data.pubdate?.toISOString().slice(0, 10) ?? ''}
+      {parseDate(post)?.toISOString().slice(0, 10)}
     </p>
   </a>
 </li>

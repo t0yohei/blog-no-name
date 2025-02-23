@@ -2,11 +2,11 @@ import { z } from 'astro:content';
 
 // https://qiita.com/api/v2/docs#%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97
 export const GroupSchema = z.object({
-  created_at: z.string(),
+  created_at: z.coerce.date(),
   description: z.string(),
   name: z.string(),
   private: z.boolean(),
-  updated_at: z.string(),
+  updated_at: z.coerce.date(),
   url_name: z.string(),
 });
 
@@ -51,7 +51,7 @@ export const ItemSchema = z.object({
   body: z.string(),
   coediting: z.boolean(),
   comments_count: z.number(),
-  created_at: z.string(),
+  created_at: z.coerce.date(),
   group: GroupSchema.nullable(),
   id: z.string(),
   likes_count: z.number(),
@@ -60,7 +60,7 @@ export const ItemSchema = z.object({
   stocks_count: z.number(),
   tags: z.array(TaggingSchema),
   title: z.string(),
-  updated_at: z.string(),
+  updated_at: z.coerce.date(),
   url: z.string(),
   user: UserSchema,
   page_views_count: z.number().nullable(),

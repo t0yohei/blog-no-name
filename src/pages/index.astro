@@ -1,24 +1,26 @@
 ---
-// export const prerender = false;
+export const prerender = false;
 import HomeLayout from '../layouts/HomeLayout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
-import { getCollection } from 'astro:content';
-import { type Post } from '../model';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { parseDate, type Post } from '../model';
 
 const buildPosts = async (): Promise<Post[]> => {
   const getAllPosts = async (): Promise<Post[]> => {
-    const blogs = (await getCollection('blogs')) as Post[];
-    const slides = (await getCollection('slides')) as Post[];
-    const qiitas = (await getCollection('qiitas')) as Post[];
-    const zenns = (await getCollection('zenns')) as Post[];
-    const devTos = (await getCollection('devTos')) as Post[];
+    const blogs: CollectionEntry<'blogs'>[] = await getCollection('blogs');
+    const slides: CollectionEntry<'slides'>[] = await getCollection('slides');
+    const qiitas: CollectionEntry<'qiitas'>[] = await getCollection('qiitas');
+    const zenns: CollectionEntry<'zenns'>[] = await getCollection('zenns');
+    const devTos: CollectionEntry<'devTos'>[] = await getCollection('devTos');
     return [...blogs, ...slides, ...qiitas, ...zenns, ...devTos];
   };
 
-  const sortPostsByDate = (posts: Post[]): Post[] => {
+  const sortPostsByDate = (posts: Post[]) => {
     return posts.sort((a, b) => {
-      return (b.data.pubdate?.getTime() ?? 0) - (a.data.pubdate?.getTime() ?? 0);
+      const aDate = parseDate(a);
+      const bDate = parseDate(b);
+      return (bDate?.getTime() ?? 0) - (aDate?.getTime() ?? 0);
     });
   };
 
