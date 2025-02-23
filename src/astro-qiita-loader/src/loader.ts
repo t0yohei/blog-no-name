@@ -5,7 +5,7 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
   const qiitaUrl = new URL(options.url);
   return {
     name: 'qiita-loader',
-    load: async ({ store, logger, parseData, meta }): Promise<void> => {
+    load: async ({ store, logger, parseData, meta, generateDigest }): Promise<void> => {
       logger.info('Loading posts from Qiita');
 
       const headers = options.authToken
@@ -29,14 +29,19 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
           data: item,
         });
 
+        const digest = generateDigest(data);
+
         store.set({
           id: data.id,
           data,
           rendered: {
             html: data.rendered_body,
           },
+          digest,
         });
       });
+
+      logger.info(`Loaded ${responseJson.length} posts from Qiita`);
     },
     schema: ItemSchema,
   };
