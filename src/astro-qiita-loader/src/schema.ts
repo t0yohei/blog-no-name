@@ -69,4 +69,8 @@ export const ItemSchema = z.object({
   slide: z.boolean(),
 });
 
-export const ItemsSchema = z.array(ItemSchema);
+export type Group = z.infer<typeof GroupSchema>;
+export type User = z.infer<typeof UserSchema>;
+export type Tagging = z.infer<typeof TaggingSchema>;
+export type TeamMembership = z.infer<typeof TeamMembershipSchema>;
+export type Item = z.infer<typeof ItemSchema>;

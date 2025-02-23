@@ -1,5 +1,5 @@
 import type { Loader } from 'astro/loaders';
-import { ItemSchema } from './schema';
+import { ItemSchema, type Item } from './schema';
 
 export const qiitaLoader = (options: { url: string; authToken?: string }): Loader => {
   const qiitaUrl = new URL(options.url);
@@ -17,19 +17,19 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
 
       store.clear();
 
-      const data = await response.json();
+      const responseJson = await response.json();
 
-      data.forEach(async (item: any) => {
-        const parsedData = await parseData({
+      responseJson.forEach(async (item: Item) => {
+        const data = await parseData({
           id: item.id,
           data: item,
         });
 
         store.set({
-          id: parsedData.id,
-          data: parsedData,
+          id: data.id,
+          data,
           rendered: {
-            html: parsedData.body,
+            html: data.rendered_body,
           },
         });
       });
