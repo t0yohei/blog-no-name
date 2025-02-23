@@ -1,5 +1,5 @@
 import type { Loader } from 'astro/loaders';
-import { PostSchema } from './schema';
+import { ItemSchema } from './schema';
 
 export const qiitaLoader = (options: { url: string; authToken?: string }): Loader => {
   const qiitaUrl = new URL(options.url);
@@ -34,6 +34,6 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
         });
       });
     },
-    schema: PostSchema,
+    schema: ItemSchema,
   };
 };
