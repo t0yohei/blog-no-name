@@ -21,6 +21,7 @@ const slides = defineCollection({
 const qiitas = defineCollection({
   loader: qiitaLoader({
     url: 'https://qiita.com/api/v2/users/t0yohei/items',
+    authToken: import.meta.env.QIITA_AUTH_TOKEN,
   }),
 });
 
