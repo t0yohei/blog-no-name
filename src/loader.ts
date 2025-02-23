@@ -64,6 +64,8 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
   return {
     name: 'qiita-loader',
     load: async ({ store, logger, parseData, meta }): Promise<void> => {
+      logger.info('Loading posts from Qiita');
+
       const headers = options.authToken
         ? {
             Authorization: `Bearer ${options.authToken}`,
