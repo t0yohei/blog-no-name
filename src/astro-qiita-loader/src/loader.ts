@@ -15,6 +15,10 @@ export const qiitaLoader = (options: { url: string; authToken?: string }): Loade
         : {};
       const response = await fetch(qiitaUrl, { headers: headers as HeadersInit });
 
+      if (!response.ok) {
+        throw new Error(`Failed to fetch items: ${response.statusText}`);
+      }
+
       store.clear();
 
       const responseJson = await response.json();
