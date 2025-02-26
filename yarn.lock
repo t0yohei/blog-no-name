@@ -1036,6 +1036,7 @@ __metadata:
     "@iconify-json/mdi": "npm:^1.2.3"
     astro: "npm:^5.1.1"
     astro-icon: "npm:^1.1.5"
+    astro-qiita-loader: "npm:^0.0.1"
     prettier-plugin-astro: "npm:^0.14.1"
     textlint: "npm:^14.4.0"
     textlint-rule-preset-ja-spacing: "npm:^2.4.3"
@@ -2735,6 +2736,15 @@ __metadata:
     "@iconify/types": "npm:^2.0.0"
     "@iconify/utils": "npm:^2.1.30"
   checksum: 10c0/036a608928036868c727ec041cb1ef7e42000dbb272ad4357579678147cb1a3fd1be97a8e8d6f457ee58bcd9ac09f032da395b068f79a2ddd384f4aee44e91e4
+  languageName: node
+  linkType: hard
+
+"astro-qiita-loader@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "astro-qiita-loader@npm:0.0.1"
+  peerDependencies:
+    astro: ^5.0.0
+  checksum: 10c0/c6e3ceccf6fd02643c47fc92586e412fd49ee283af4e29d43bd565d4bbf9f4f51894527e0011cf04726cba627a7def5cc4dcb3bee462a649d788745e52545b6c
   languageName: node
   linkType: hard
 
