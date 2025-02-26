@@ -2,7 +2,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { feedLoader } from '@ascorbic/feed-loader';
-import { qiitaLoader } from './astro-qiita-loader/src/loader';
+import { qiitaLoader } from 'astro-qiita-loader';
 
 const blogs = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/content/blog' }),
