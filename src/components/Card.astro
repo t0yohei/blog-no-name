@@ -25,7 +25,11 @@ const getPostHref = (): string => {
 ---
 
 <li class="link-card">
-  <a href={getPostHref()}>
+  <a
+    href={getPostHref()}
+    target={post.collection !== 'blogs' ? '_blank' : undefined}
+    rel={post.collection !== 'blogs' ? 'noopener noreferrer' : undefined}
+  >
     <span class="icon-container">
       {
         post.collection === 'slides' ? (
