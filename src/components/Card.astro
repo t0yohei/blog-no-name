@@ -10,9 +10,9 @@ export interface Props {
 
 const { post } = Astro.props;
 
-const buildPreview = (text: string, size: number = 50): string => {
+const buildPreview = (text: string | undefined | null, size: number = 50): string => {
   if (!text) return '';
-  return text.length > size ? text.substring(0, size).replace(/.$/, '...') : text;
+  return text.length > size ? `${text.substring(0, size)}...` : text;
 };
 
 const getPostHref = (): string => {
@@ -22,30 +22,31 @@ const getPostHref = (): string => {
       ? (post.data.url ?? '')
       : (post.data.link ?? '');
 };
+
+const getLinkAttributes = () => {
+  const isExternalLink = post.collection !== 'blogs';
+  return {
+    href: getPostHref(),
+    target: isExternalLink ? '_blank' : undefined,
+    rel: isExternalLink ? 'noopener noreferrer' : undefined,
+  };
+};
 ---
 
 <li class="link-card">
-  <a
-    href={getPostHref()}
-    target={post.collection !== 'blogs' ? '_blank' : undefined}
-    rel={post.collection !== 'blogs' ? 'noopener noreferrer' : undefined}
-  >
+  <a {...getLinkAttributes()}>
     <span class="icon-container">
+      {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" />}
+      {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="Qiita" class="icon" />}
+      {post.collection === 'zenns' && <Icon class="icon" name="zenn" />}
+      {post.collection === 'devTos' && <Icon class="icon" name="devTo" />}
       {
-        post.collection === 'slides' ? (
-          <Icon class="icon" name="speakerdeck" />
-        ) : post.collection === 'qiitas' ? (
-          <Image src={QiitaIcon} alt="Qiita" class="icon" />
-        ) : post.collection === 'zenns' ? (
-          <Icon class="icon" name="zenn" />
-        ) : post.collection === 'devTos' ? (
-          <Icon class="icon" name="devTo" />
-        ) : (
+        !['slides', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
           <Icon size={20} class="icon" name="mdi:file-document" />
         )
       }
     </span>
-    <h2>{buildPreview(post.data.title ?? '', 80)}</h2>
+    <h2>{buildPreview(post.data.title, 80)}</h2>
     <span class="link-icon-container">
       {
         post.collection === 'blogs' ? (
@@ -56,7 +57,7 @@ const getPostHref = (): string => {
       }
     </span>
     <p class="blog-body">
-      {buildPreview(parseDescription(post) ?? '')}
+      {buildPreview(parseDescription(post))}
     </p>
     <p class="pub-date">
       {parseDate(post)?.toISOString().slice(0, 10)}
