@@ -9,6 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "check": "astro check",
+    "test": "node --test tests/*.test.mjs",
     "textlint": "textlint ./src/content/blog/",
     "textlint:fix": "textlint --fix ./src/content/blog/"
   },
@@ -29,6 +31,7 @@
     "vue": "^3.5.43"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "prettier": "^3.9.10"
   },
   "packageManager": "yarn@4.5.3"

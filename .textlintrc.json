@@ -15,6 +15,13 @@
       },
       "no-exclamation-question-mark": false,
       "no-double-negative-ja": false,
+      "ja-no-weak-phrase": false,
+      "no-mix-dearu-desumasu": {
+        "preferInBody": ""
+      },
+      "no-doubled-joshi": {
+        "allow": ["も", "としても"]
+      },
       "ja-no-mixed-period": {
         "allowPeriodMarks": ["。", "、"]
       }

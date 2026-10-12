@@ -1,0 +1,30 @@
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - name: Install dependencies
+        run: node .yarn/releases/yarn-4.5.3.cjs install --immutable
+      - name: Lint articles
+        run: node .yarn/releases/yarn-4.5.3.cjs textlint
+      - name: Check types
+        run: node .yarn/releases/yarn-4.5.3.cjs check
+      - name: Build
+        run: node .yarn/releases/yarn-4.5.3.cjs build
+      - name: Test page responses
+        run: node .yarn/releases/yarn-4.5.3.cjs test

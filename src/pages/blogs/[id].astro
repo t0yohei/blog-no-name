@@ -4,11 +4,11 @@ import { getEntry, render } from 'astro:content';
 
 // 1. Get the id from the incoming server request
 const { id } = Astro.params;
-if (id === undefined) return;
+if (id === undefined) return Astro.rewrite('/404');
 
 // 2. Query for the entry directly using the request id
 const entry = await getEntry('blogs', id);
-if (entry === undefined) return;
+if (entry === undefined) return Astro.rewrite('/404');
 
 // 3. render the entry to HTML in the template
 const { Content } = await render(entry);

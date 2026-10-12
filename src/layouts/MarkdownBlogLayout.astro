@@ -14,7 +14,7 @@ const preview = headSentence?.replace(/.$/, '...') || '';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -38,7 +38,9 @@ const preview = headSentence?.replace(/.$/, '...') || '';
       <h1>{entry.data.title}</h1>
       <p>投稿日: {entry.data.pubdate.toISOString().slice(0, 10)}</p>
       <slot />
-      <footer><a href="/">ブログ一覧に戻る</a></footer>
+      <footer>
+        <a href="/">ブログ一覧に戻る</a>
+      </footer>
     </main>
     <style>
       main {
