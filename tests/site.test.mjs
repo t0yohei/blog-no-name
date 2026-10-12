@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+import { readdir } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
 
@@ -62,6 +63,8 @@ for (const [path, title, type] of [
     assert.ok(html.includes(`property="og:title" content="${title}"`));
     assert.ok(html.includes(`property="og:type" content="${type}"`));
     assert.ok(html.includes(`property="og:url" content="https://blog-no-name.com${path}"`));
+    assert.ok(html.includes(`rel="canonical" href="https://blog-no-name.com${path}"`));
+    assert.equal((html.match(/rel="canonical"/g) ?? []).length, 1);
   });
 }
 
@@ -73,5 +76,106 @@ for (const path of ['/blogs/no-such-blog-issue-37', '/no-such-page-issue-37']) {
     const html = await response.text();
     assert.ok(html.includes('ページが見つかりません'));
     assert.match(html, /<a\b[^>]*href="\/"[^>]*>ブログ一覧に戻る<\/a>/);
+    assert.doesNotMatch(html, /rel="canonical"/);
   });
 }
+
+test('canonical and OGP URLs omit queries and trailing slashes', async () => {
+  for (const [path, canonicalPath] of [
+    ['/?utm_source=test', '/'],
+    ['/about/?utm_source=test', '/about'],
+    ['/blogs/20261012/?utm_source=test', '/blogs/20261012'],
+  ]) {
+    const response = await fetch(new URL(path, baseUrl));
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    const url = `https://blog-no-name.com${canonicalPath}`;
+    assert.ok(html.includes(`rel="canonical" href="${url}"`));
+    assert.ok(html.includes(`property="og:url" content="${url}"`));
+  }
+});
+
+test('article descriptions use an explicit summary or plain text from existing Markdown', async () => {
+  const summary =
+    '自分より賢い AI に課題解決を依頼する時、人間には何が必要なのか。コンテキスト、課題の提示、腹案、課題設定の役割を考える。';
+  const article = await (await fetch(`${baseUrl}/blogs/20261012`)).text();
+  assert.ok(article.includes(`name="description" content="${summary}"`));
+  assert.ok(article.includes(`property="og:description" content="${summary}"`));
+  const index = await (await fetch(baseUrl)).text();
+  assert.ok(index.includes(`${summary.slice(0, 50)}...`));
+
+  for (const id of ['20250216', '20230909', '20241224']) {
+    const html = await (await fetch(`${baseUrl}/blogs/${id}`)).text();
+    const description = html.match(/name="description" content="([^"]+)"/)[1];
+    assert.ok(description.length > 50);
+    assert.doesNotMatch(description, /\]\(|https?:\/\/|&lt;|&#x3C;|##|`/);
+    assert.ok(html.includes(`property="og:description" content="${description}"`));
+  }
+});
+
+test('BlogPosting describes the article and matches the visible author', async () => {
+  const html = await (await fetch(`${baseUrl}/blogs/20261012`)).text();
+  const scripts = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  assert.equal(scripts.length, 1);
+  const data = JSON.parse(scripts[0][1]);
+  assert.equal(data['@context'], 'https://schema.org');
+  assert.equal(data['@type'], 'BlogPosting');
+  assert.ok(html.includes(`<title>${data.headline}</title>`));
+  assert.ok(html.includes(`name="description" content="${data.description}"`));
+  assert.equal(data.datePublished, '2026-10-12T00:00:00.000Z');
+  assert.equal(data.url, 'https://blog-no-name.com/blogs/20261012');
+  assert.equal(data.mainEntityOfPage, data.url);
+  assert.equal(data.image, 'https://blog-no-name.com/img/blog-no-name.png');
+  assert.equal(data.author['@type'], 'Person');
+  assert.equal(data.author.name, 'とよへい(t0yohei)');
+  assert.equal(data.author.url, 'https://blog-no-name.com/about');
+  assert.match(html, /<a href="\/about" rel="author"[^>]*>\s*とよへい\(t0yohei\)\s*<\/a>/);
+  assert.equal('dateModified' in data, false);
+});
+
+test('sitemap lists all local articles and canonical pages, and robots.txt advertises it', async () => {
+  const response = await fetch(`${baseUrl}/sitemap.xml`);
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get('content-type'), /application\/xml/);
+  const xml = await response.text();
+  assert.match(xml, /^<\?xml version="1.0" encoding="UTF-8"\?>/);
+  assert.ok(xml.includes('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'));
+  const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  const files = await readdir(new URL('../src/content/blog/', import.meta.url));
+  const expected = [
+    '/',
+    '/about',
+    '/app',
+    ...files
+      .filter((file) => file.endsWith('.md') && !file.startsWith('_'))
+      .map((file) => `/blogs/${file.slice(0, -3)}`),
+  ].map((path) => `https://blog-no-name.com${path}`);
+  assert.deepEqual(urls.toSorted(), expected.toSorted());
+  assert.equal(new Set(urls).size, urls.length);
+  for (const url of urls) {
+    const page = await fetch(new URL(new URL(url).pathname, baseUrl));
+    assert.equal(page.status, 200, url);
+    const html = await page.text();
+    assert.ok(html.includes(`rel="canonical" href="${url}"`), url);
+  }
+
+  const robots = await fetch(`${baseUrl}/robots.txt`);
+  assert.equal(robots.status, 200);
+  assert.match(await robots.text(), /Sitemap: https:\/\/blog-no-name\.com\/sitemap\.xml/);
+});
+
+test('Astro articles link to related local articles with descriptive link text', async () => {
+  for (const id of ['20230128', '20230909', '20241223', '20250216']) {
+    const html = await (await fetch(`${baseUrl}/blogs/${id}`)).text();
+    const related = html.match(/<h2[^>]*>関連記事<\/h2>([\s\S]*?)<\/ul>/);
+    assert.ok(related, id);
+    const links = [...related[1].matchAll(/<a href="(\/blogs\/[^"#]+)">([^<]+)<\/a>/g)];
+    assert.ok(links.length > 0, id);
+    for (const [, href, title] of links) {
+      assert.notEqual(href, `/blogs/${id}`);
+      const target = await fetch(new URL(href, baseUrl));
+      assert.equal(target.status, 200, href);
+      assert.ok((await target.text()).includes(`<title>${title}</title>`));
+    }
+  }
+});
