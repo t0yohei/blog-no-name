@@ -125,12 +125,34 @@ test('BlogPosting describes the article and matches the visible author', async (
   assert.equal(data.datePublished, '2026-10-12T00:00:00.000Z');
   assert.equal(data.url, 'https://blog-no-name.com/blogs/20261012');
   assert.equal(data.mainEntityOfPage, data.url);
-  assert.equal(data.image, 'https://blog-no-name.com/img/blog-no-name.png');
+  assert.equal(data.image, 'https://blog-no-name.com/og/20261012.png');
+  assert.ok(html.includes(`property="og:image" content="${data.image}"`));
   assert.equal(data.author['@type'], 'Person');
   assert.equal(data.author.name, 'とよへい(t0yohei)');
   assert.equal(data.author.url, 'https://blog-no-name.com/about');
   assert.match(html, /<a href="\/about" rel="author"[^>]*>\s*とよへい\(t0yohei\)\s*<\/a>/);
   assert.equal('dateModified' in data, false);
+});
+
+test('articles reference their own PNG social images', async () => {
+  const images = [];
+  for (const id of ['20261012', '20230119', '20231104']) {
+    const html = await (await fetch(`${baseUrl}/blogs/${id}`)).text();
+    assert.ok(html.includes(`property="og:image" content="https://blog-no-name.com/og/${id}.png"`));
+    assert.ok(html.includes('property="og:image:width" content="1200"'));
+    assert.ok(html.includes('property="og:image:height" content="630"'));
+    const response = await fetch(`${baseUrl}/og/${id}.png`);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get('content-type'), /image\/png/);
+    const png = Buffer.from(await response.arrayBuffer());
+    assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+    assert.equal(png.readUInt32BE(16), 1200);
+    assert.equal(png.readUInt32BE(20), 630);
+    images.push(png);
+  }
+  assert.notDeepEqual(images[0], images[1]);
+  assert.notDeepEqual(images[1], images[2]);
+  assert.equal((await fetch(`${baseUrl}/og/no-such-blog.png`)).status, 404);
 });
 
 test('sitemap lists all local articles and canonical pages, and robots.txt advertises it', async () => {
