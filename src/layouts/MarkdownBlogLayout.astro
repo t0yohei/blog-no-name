@@ -12,6 +12,7 @@ const { entry } = Astro.props;
 
 const preview = parseDescription(entry);
 const pageUrl = new URL(`/blogs/${entry.id}`, Astro.site);
+const imageUrl = new URL(`/og/${entry.id}.png`, Astro.site).href;
 const authorName = 'とよへい(t0yohei)';
 const structuredData = {
   '@context': 'https://schema.org',
@@ -21,7 +22,7 @@ const structuredData = {
   datePublished: entry.data.pubdate.toISOString(),
   url: pageUrl.href,
   mainEntityOfPage: pageUrl.href,
-  image: new URL('/img/blog-no-name.png', Astro.site).href,
+  image: imageUrl,
   author: {
     '@type': 'Person',
     name: authorName,
@@ -43,7 +44,10 @@ const structuredData = {
     <meta property="og:title" content={entry.data.title} />
     <meta property="og:type" content="article" />
     <meta property="og:url" content={pageUrl.href} />
-    <meta property="og:image" content="https://blog-no-name.com/img/blog-no-name.png" />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={entry.data.title} />
     <meta property="og:description" content={preview} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@t0yohei" />

@@ -23,6 +23,8 @@
     "astro-icon": "^1.2.0",
     "astro-qiita-loader": "^0.0.1",
     "prettier-plugin-astro": "^1.1.1",
+    "satori": "^0.51.0",
+    "sharp": "^0.34.5",
     "textlint": "^15.8.0",
     "textlint-rule-preset-ja-spacing": "^3.0.3",
     "textlint-rule-preset-ja-technical-writing": "^12.0.2",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@types/node": "^24",
     "prettier": "^3.9.10"
   },
   "packageManager": "yarn@4.5.3"
