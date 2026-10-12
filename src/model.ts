@@ -3,7 +3,11 @@ import { type CollectionEntry } from 'astro:content';
 export type Post = CollectionEntry<'blogs' | 'slides' | 'qiitas' | 'zenns' | 'devTos'>;
 
 export const parseDate = (post: Post) => {
-  return 'pubdate' in post.data ? post.data.pubdate : 'created_at' in post.data ? post.data.created_at : null;
+  return 'pubdate' in post.data
+    ? post.data.pubdate
+    : 'created_at' in post.data
+      ? post.data.created_at
+      : post.data.published;
 };
 
 export const parseDescription = (post: Post) => {

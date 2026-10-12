@@ -1,5 +1,6 @@
 // 1. Import utilities from `astro:content`
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { feedLoader } from '@ascorbic/feed-loader';
 import { qiitaLoader } from 'astro-qiita-loader';
