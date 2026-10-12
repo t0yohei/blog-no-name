@@ -16,11 +16,7 @@ const buildPreview = (text: string | undefined | null, size: number = 50): strin
 };
 
 const getPostHref = (): string => {
-  return post.collection === 'blogs'
-    ? `blogs/${post.id}`
-    : post.collection === 'qiitas'
-      ? (post.data.url ?? '')
-      : (post.data.link ?? '');
+  return post.collection === 'blogs' ? `blogs/${post.id}` : (post.data.url ?? '');
 };
 
 const getLinkAttributes = () => {
