@@ -10,6 +10,7 @@ import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://blog-no-name.com',
   compressHTML: true,
   integrations: [vue(), icon()],
   output: 'server',
