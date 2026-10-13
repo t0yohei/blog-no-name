@@ -117,6 +117,11 @@ test('article descriptions use an explicit summary or plain text from existing M
   assert.ok(article.includes(`property="og:description" content="${summary}"`));
   const index = await (await fetch(baseUrl)).text();
   assert.ok(index.includes(`${summary.slice(0, 50)}...`));
+  const sttCard = [...index.matchAll(/<li\b[^>]*class="link-card"[^>]*>([\s\S]*?)<\/li>/g)]
+    .map(([, card]) => card)
+    .find((card) => card.includes('https://zenn.dev/t0yohei/articles/5aecc668e4e9c6'));
+  assert.ok(sttCard);
+  assert.match(sttCard, /class="blog-body"[^>]*>Mac上でfaster-whisperとmlx-whisperの処理速度・認識精度を比較。<\/p>/);
 
   for (const id of ['20250216', '20230909', '20241224']) {
     const html = await (await fetch(`${baseUrl}/blogs/${id}`)).text();
