@@ -61,9 +61,9 @@ for (const [path, title, type] of [
     assert.match(html, /<html\b[^>]*\blang="ja"/);
     const charsetIndex = html.indexOf('charset="UTF-8"');
     assert.ok(charsetIndex >= 0 && charsetIndex < 1024, 'Encoding is declared before the inline theme script');
-    assert.match(html, /<select\b[^>]*data-theme-select/);
+    assert.match(html, /<button\b[^>]*data-theme-trigger/);
     for (const preference of ['system', 'light', 'dark']) {
-      assert.ok(html.includes(`value="${preference}"`));
+      assert.ok(html.includes(`data-theme-option="${preference}"`));
     }
     assert.ok(html.includes(`<title>${title}</title>`));
     assert.ok(html.includes(`property="og:title" content="${title}"`));

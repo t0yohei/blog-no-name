@@ -20,12 +20,22 @@ function createBrowser({ dark = false, saved = null, storageUnavailable = false 
       },
     };
   };
-  class Select {
-    value = 'system';
-    matches(selector) { return selector === '[data-theme-select]'; }
+  class Element {
+    constructor(selector, dataset = {}) {
+      this.selector = selector;
+      this.dataset = dataset;
+      this.attributes = new Map();
+      this.hidden = true;
+    }
+    closest(selector) { return selector === this.selector ? this : null; }
+    setAttribute(name, value) { this.attributes.set(name, value); }
+    focus() { document.activeElement = this; }
   }
   let stored = saved;
-  let select;
+  let options = [];
+  let icons = [];
+  let trigger;
+  let menu;
   let hidden = true;
   const media = { ...events(), matches: dark };
   const window = { ...events(), matchMedia: () => media };
@@ -33,11 +43,23 @@ function createBrowser({ dark = false, saved = null, storageUnavailable = false 
     ...events(),
     documentElement: { dataset: {} },
     querySelector(selector) {
-      if (selector === '[data-theme-select]') return select ?? null;
-      if (selector === '[data-theme-control]' && select) {
-        return { removeAttribute: () => { hidden = false; } };
+      if (selector === '[data-theme-trigger]') return trigger ?? null;
+      if (selector === '[data-theme-menu]') return menu ?? null;
+      if (selector === '[data-theme-option][aria-checked="true"]') {
+        return options.find(option => option.attributes.get('aria-checked') === 'true') ?? null;
+      }
+      if (selector === '[data-theme-control]' && trigger) {
+        return {
+          removeAttribute: () => { hidden = false; },
+          contains: target => target === trigger || options.includes(target),
+        };
       }
       return null;
+    },
+    querySelectorAll(selector) {
+      if (selector === '[data-theme-option]') return options;
+      if (selector === '[data-theme-icon]') return icons;
+      return [];
     },
   };
   const localStorage = {
@@ -54,19 +76,34 @@ function createBrowser({ dark = false, saved = null, storageUnavailable = false 
       stored = null;
     },
   };
-  runInNewContext(script, { window, document, localStorage, HTMLSelectElement: Select });
+  const createMenu = () => {
+    options = ['system', 'light', 'dark'].map(themeOption => new Element('[data-theme-option]', { themeOption }));
+    icons = ['light', 'dark'].map(themeIcon => new Element('[data-theme-icon]', { themeIcon }));
+    trigger = new Element('[data-theme-trigger]');
+    menu = new Element('[data-theme-menu]');
+  };
+  runInNewContext(script, { window, document, localStorage, Element });
   return {
     get theme() { return document.documentElement.dataset.theme; },
-    get selection() { return select?.value; },
+    get selection() { return document.querySelector('[data-theme-option][aria-checked="true"]')?.dataset.themeOption; },
     get stored() { return stored; },
     get hidden() { return hidden; },
+    get menuOpen() { return !menu.hidden; },
+    get expanded() { return trigger.attributes.get('aria-expanded'); },
+    get focused() { return document.activeElement === trigger ? 'trigger' : document.activeElement?.dataset.themeOption; },
+    get visibleIcon() { return icons.find(icon => !icon.hidden)?.dataset.themeIcon; },
     mount() {
-      select = new Select();
+      createMenu();
       document.dispatch('astro:page-load');
     },
     choose(value) {
-      select.value = value;
-      document.dispatch('change', { target: select });
+      document.dispatch('click', { target: options.find(option => option.dataset.themeOption === value) });
+    },
+    open() {
+      document.dispatch('click', { target: trigger });
+    },
+    key(key, fromTrigger = false) {
+      document.dispatch('keydown', { key, target: fromTrigger ? trigger : document.activeElement, preventDefault() {} });
     },
     system(dark) {
       media.matches = dark;
@@ -74,14 +111,14 @@ function createBrowser({ dark = false, saved = null, storageUnavailable = false 
     },
     navigate() {
       document.documentElement = { dataset: {} };
-      select = new Select();
+      createMenu();
       document.dispatch('astro:after-swap');
     },
     storage(key, newValue) {
       window.dispatch('storage', { key, newValue });
     },
-    unrelatedChange() {
-      document.dispatch('change', { target: {} });
+    outsideClick() {
+      document.dispatch('click', { target: new Element('outside') });
     },
   };
 }
@@ -158,9 +195,60 @@ test('synchronizes theme changes from another tab and ignores other storage keys
   assert.equal(browser.selection, 'system');
 });
 
-test('unrelated form changes do not change the theme', () => {
+test('outside clicks close the menu without changing the theme', () => {
   const browser = createBrowser({ saved: 'dark' });
   browser.mount();
-  browser.unrelatedChange();
+  browser.open();
+  assert.equal(browser.menuOpen, true);
+  browser.outsideClick();
+  assert.equal(browser.menuOpen, false);
+  assert.equal(browser.expanded, 'false');
   assert.equal(browser.theme, 'dark');
+});
+
+test('menu focuses the selected option and supports arrows, Home, End, and Escape', () => {
+  const browser = createBrowser({ saved: 'light' });
+  browser.mount();
+  browser.open();
+  assert.equal(browser.focused, 'light');
+  assert.equal(browser.expanded, 'true');
+  browser.key('ArrowDown');
+  assert.equal(browser.focused, 'dark');
+  browser.key('ArrowDown');
+  assert.equal(browser.focused, 'system');
+  browser.key('ArrowUp');
+  assert.equal(browser.focused, 'dark');
+  browser.key('Home');
+  assert.equal(browser.focused, 'system');
+  browser.key('End');
+  assert.equal(browser.focused, 'dark');
+  assert.equal(browser.selection, 'light');
+  browser.key('Escape');
+  assert.equal(browser.menuOpen, false);
+  assert.equal(browser.focused, 'trigger');
+});
+
+test('keyboard can open the menu and choosing an option closes it and restores focus', () => {
+  const browser = createBrowser();
+  browser.mount();
+  browser.key('ArrowUp', true);
+  assert.equal(browser.menuOpen, true);
+  assert.equal(browser.focused, 'dark');
+  browser.choose('dark');
+  assert.equal(browser.menuOpen, false);
+  assert.equal(browser.focused, 'trigger');
+  assert.equal(browser.selection, 'dark');
+  browser.key('ArrowDown', true);
+  assert.equal(browser.focused, 'system');
+  browser.key('Tab');
+  assert.equal(browser.menuOpen, false);
+});
+
+test('trigger icon follows the resolved theme while the system option stays selected', () => {
+  const browser = createBrowser();
+  browser.mount();
+  assert.equal(browser.visibleIcon, 'light');
+  browser.system(true);
+  assert.equal(browser.visibleIcon, 'dark');
+  assert.equal(browser.selection, 'system');
 });
