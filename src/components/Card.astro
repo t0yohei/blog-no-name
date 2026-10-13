@@ -31,33 +31,27 @@ const getLinkAttributes = () => {
 
 <li class="link-card">
   <a {...getLinkAttributes()}>
-    <span class="icon-container">
-      {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" />}
-      {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="Qiita" class="icon" />}
-      {post.collection === 'zenns' && <Icon class="icon" name="zenn" />}
-      {post.collection === 'devTos' && <Icon class="icon" name="devTo" />}
-      {
-        !['slides', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
+    <div class="card-meta">
+      <span class="icon-container">
+        {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" />}
+        {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="Qiita" class="icon" />}
+        {post.collection === 'zenns' && <Icon class="icon" name="zenn" />}
+        {post.collection === 'devTos' && <Icon class="icon" name="devTo" />}
+        {!['slides', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
           <Icon size={20} class="icon" name="mdi:file-document" />
-        )
-      }
-    </span>
-    <h2>{buildPreview(post.data.title, 80)}</h2>
-    <span class="link-icon-container">
-      {
-        post.collection === 'blogs' ? (
+        )}
+      </span>
+      <span class="link-icon-container">
+        {post.collection === 'blogs' ? (
           <Icon class="icon" name="mdi:arrow-right" />
         ) : (
           <Icon class="icon" name="mdi:external-link" />
-        )
-      }
-    </span>
-    <p class="blog-body">
-      {buildPreview(parseDescription(post))}
-    </p>
-    <p class="pub-date">
-      {parseDate(post)?.toISOString().slice(0, 10)}
-    </p>
+        )}
+      </span>
+    </div>
+    <h2>{buildPreview(post.data.title, 80)}</h2>
+    <p class="blog-body">{buildPreview(parseDescription(post))}</p>
+    <p class="pub-date">{parseDate(post)?.toISOString().slice(0, 10)}</p>
   </a>
 </li>
 <style>
@@ -78,6 +72,10 @@ const getLinkAttributes = () => {
 
   .link-card > a {
     width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
     text-decoration: none;
     line-height: 1.4;
     border-radius: 0.35rem;
@@ -88,7 +86,7 @@ const getLinkAttributes = () => {
     margin: 0;
     font-size: 1.25rem;
     transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    padding: 0.5rem 2.5rem;
+    padding: 0.5rem 0;
   }
 
   p {
@@ -98,25 +96,24 @@ const getLinkAttributes = () => {
 
   .blog-body {
     font-size: 1.1rem;
-    padding: 0.5rem 1.5rem 2rem;
+    padding: 0 0 16px;
   }
 
-  .icon-container {
-    position: absolute;
-    left: 12px;
-    top: 12px;
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
   }
 
+  .icon-container,
   .link-icon-container {
-    position: absolute;
-    right: 12px;
-    top: 12px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .pub-date {
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
+    margin-top: auto;
+    align-self: flex-end;
   }
 
   .link-card:is(:hover, :focus-within) {
