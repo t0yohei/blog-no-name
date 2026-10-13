@@ -6,9 +6,18 @@ import QiitaIcon from '../icons/qiita.png';
 
 export interface Props {
   post: Post;
+  headingLevel?: 3 | 4;
 }
 
-const { post } = Astro.props;
+const { post, headingLevel = 3 } = Astro.props;
+const Heading = headingLevel === 4 ? 'h4' : 'h3';
+const sourceName = {
+  blogs: 'Blog',
+  slides: 'Speaker Deck',
+  qiitas: 'Qiita',
+  zenns: 'Zenn',
+  devTos: 'dev.to',
+}[post.collection];
 
 const buildPreview = (text: string | undefined | null, size: number = 50): string => {
   if (!text) return '';
@@ -33,13 +42,14 @@ const getLinkAttributes = () => {
   <a {...getLinkAttributes()}>
     <div class="card-meta">
       <span class="icon-container">
-        {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" />}
-        {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="Qiita" class="icon" />}
-        {post.collection === 'zenns' && <Icon class="icon" name="zenn" />}
-        {post.collection === 'devTos' && <Icon class="icon" name="devTo" />}
+        {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" aria-hidden="true" />}
+        {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="" class="icon" />}
+        {post.collection === 'zenns' && <Icon class="icon" name="zenn" aria-hidden="true" />}
+        {post.collection === 'devTos' && <Icon class="icon" name="devTo" aria-hidden="true" />}
         {!['slides', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
-          <Icon size={20} class="icon" name="mdi:file-document" />
+          <Icon size={20} class="icon" name="mdi:file-document" aria-hidden="true" />
         )}
+        <span class="source-label">{sourceName}</span>
       </span>
       <span class="link-icon-container">
         {post.collection === 'blogs' ? (
@@ -49,7 +59,7 @@ const getLinkAttributes = () => {
         )}
       </span>
     </div>
-    <h2>{buildPreview(post.data.title, 80)}</h2>
+    <Heading class="card-title">{buildPreview(post.data.title, 80)}</Heading>
     <p class="blog-body">{buildPreview(parseDescription(post))}</p>
     <p class="pub-date">{parseDate(post)?.toISOString().slice(0, 10)}</p>
   </a>
@@ -82,7 +92,7 @@ const getLinkAttributes = () => {
     color: var(--text);
     background-color: color-mix(in srgb, var(--surface) 80%, transparent);
   }
-  h2 {
+  .card-title {
     margin: 0;
     font-size: 1.25rem;
     transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -116,6 +126,15 @@ const getLinkAttributes = () => {
     align-self: flex-end;
   }
 
+  .icon-container {
+    gap: 8px;
+  }
+
+  .source-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
   .link-card:is(:hover, :focus-within) {
     background-position: 0;
   }
@@ -127,7 +146,7 @@ const getLinkAttributes = () => {
     margin: 0;
   }
 
-  .link-card:is(:hover, :focus-within) h2 {
+  .link-card:is(:hover, :focus-within) .card-title {
     color: rgb(var(--accent));
   }
 </style>

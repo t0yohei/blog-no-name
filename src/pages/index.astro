@@ -28,6 +28,15 @@ const buildPosts = async (): Promise<Post[]> => {
 };
 
 const posts = await buildPosts();
+const recentPosts = posts.slice(0, 6);
+const postsByYear = new Map<string, Post[]>();
+for (const post of posts) {
+  const year = parseDate(post)?.getUTCFullYear().toString() ?? 'unknown';
+  const entries = postsByYear.get(year) ?? [];
+  entries.push(post);
+  postsByYear.set(year, entries);
+}
+const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `${year}年`);
 ---
 
 <HomeLayout title="Blog No Name">
@@ -35,15 +44,81 @@ const posts = await buildPosts();
     <h1>
       Blog <span class="text-gradient">No Name</span>
     </h1>
-    <ul role="list" class="link-card-grid">
-      {posts.map((post) => (
-        <Card post={post} />
+    <section aria-labelledby="recent-heading" class="recent-posts">
+      <div class="section-heading">
+        <h2 id="recent-heading">最近の記事</h2>
+        <a href="#archive-heading">年別アーカイブへ</a>
+      </div>
+      <ul role="list" class="link-card-grid">
+        {recentPosts.map((post) => (
+          <Card post={post} />
+        ))}
+      </ul>
+    </section>
+    <section aria-labelledby="archive-heading" class="article-archive">
+      <h2 id="archive-heading">年別アーカイブ</h2>
+      <nav aria-label="公開年から探す" class="year-links">
+        {[...postsByYear.keys()].map((year) => (
+          <a href={`#year-${year}`}>{yearLabel(year)}</a>
+        ))}
+      </nav>
+      {[...postsByYear].map(([year, entries]) => (
+        <section aria-labelledby={`year-${year}`} class="archive-year">
+          <h3 id={`year-${year}`}>{yearLabel(year)}</h3>
+          <ul role="list" class="link-card-grid">
+            {entries.map((post) => (
+              <Card post={post} headingLevel={4} />
+            ))}
+          </ul>
+        </section>
       ))}
-    </ul>
+    </section>
   </main>
 </HomeLayout>
 
 <style>
+  .section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 24px 0 16px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  .section-heading a {
+    padding: 8px 0;
+    font-size: 0.875rem;
+    text-underline-offset: 0.2em;
+  }
+  .article-archive {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .year-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 16px 0 24px;
+  }
+  .year-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 4px;
+    text-underline-offset: 0.2em;
+  }
+  .archive-year + .archive-year {
+    margin-top: 40px;
+  }
+  .archive-year h3 {
+    margin: 0 0 16px;
+    font-size: 1.25rem;
+  }
   .text-gradient {
     background-image: var(--accent-gradient);
     -webkit-background-clip: text;
@@ -75,5 +150,6 @@ const posts = await buildPosts();
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 335px), 1fr));
     gap: 1.5rem;
     padding: 0;
+    margin: 0;
   }
 </style>

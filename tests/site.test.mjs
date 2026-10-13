@@ -140,6 +140,55 @@ test('BlogPosting retains author metadata without displaying an author byline', 
   assert.equal('dateModified' in data, false);
 });
 
+test('the index offers recent posts and a complete chronological yearly archive', async () => {
+  const html = await (await fetch(baseUrl)).text();
+  const recent = html.match(/<section\b[^>]*aria-labelledby="recent-heading"[^>]*>([\s\S]*?)<\/section>/)[1];
+  const archive = html.match(/<section\b[^>]*aria-labelledby="archive-heading"[^>]*>([\s\S]*)/)[1];
+  const cardsIn = (fragment) =>
+    [...fragment.matchAll(/<li\b[^>]*class="link-card"[^>]*>([\s\S]*?)<\/li>/g)].map(([, card]) => {
+      const [, href, attributes] = card.match(/<a\b[^>]*href="([^"]+)"([^>]*)>/);
+      assert.match(card, /class="source-label"[^>]*>\s*(Blog|Qiita|Zenn|dev\.to|Speaker Deck)\s*<\/span>/);
+      if (href.startsWith('blogs/')) {
+        assert.doesNotMatch(attributes, /target=/);
+      } else {
+        assert.match(attributes, /target="_blank"/);
+        assert.match(attributes, /rel="noopener noreferrer"/);
+      }
+      return { href, date: card.match(/class="pub-date"[^>]*>\s*([^<]*)/)[1].trim() };
+    });
+  const recentCards = cardsIn(recent);
+  const archiveCards = cardsIn(archive);
+  assert.equal(recentCards.length, 6);
+  assert.equal(new Set(archiveCards.map(({ href }) => href)).size, archiveCards.length);
+  assert.deepEqual(recentCards, archiveCards.slice(0, 6));
+  assert.match(recent, /<h3\b[^>]*class="card-title"/);
+  assert.match(archive, /<h4\b[^>]*class="card-title"/);
+  const files = await readdir(new URL('../src/content/blog/', import.meta.url));
+  assert.deepEqual(
+    archiveCards
+      .filter(({ href }) => href.startsWith('blogs/'))
+      .map(({ href }) => href)
+      .toSorted(),
+    files
+      .filter((file) => file.endsWith('.md') && !file.startsWith('_'))
+      .map((file) => `blogs/${file.slice(0, -3)}`)
+      .toSorted(),
+  );
+  const years = [...archive.matchAll(/<section\b[^>]*aria-labelledby="year-([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+  assert.ok(years.length > 0);
+  const datedYears = years.map(([, year]) => year).filter((year) => year !== 'unknown');
+  assert.deepEqual(datedYears, datedYears.toSorted().toReversed());
+  for (const [, year, section] of years) {
+    assert.ok(archive.includes(`href="#year-${year}"`));
+    const cards = cardsIn(section);
+    assert.ok(cards.length > 0);
+    const dates = cards.map(({ date }) => date);
+    assert.deepEqual(dates, dates.toSorted().toReversed());
+    if (year !== 'unknown') assert.ok(dates.every((date) => date.startsWith(`${year}-`)));
+  }
+  assert.equal(years.flatMap(([, , section]) => cardsIn(section)).length, archiveCards.length);
+});
+
 test('articles reference their own PNG social images', async () => {
   const images = [];
   for (const id of ['20261012', '20230119', '20231104']) {
