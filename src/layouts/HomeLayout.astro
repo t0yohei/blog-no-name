@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import ThemeScript from '../components/ThemeScript.astro';
 import { ClientRouter } from 'astro:transitions';
 
 export interface Props {
@@ -15,6 +16,7 @@ const isNotFound = Astro.response.status === 404 || Astro.url.pathname === '/404
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <ThemeScript />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -35,10 +37,4 @@ const isNotFound = Astro.response.status === 404 || Astro.url.pathname === '/404
     <Header />
     <slot />
   </body>
-  <style>
-    :root {
-      --accent: 124, 58, 237;
-      --accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
-    }
-  </style>
 </html>

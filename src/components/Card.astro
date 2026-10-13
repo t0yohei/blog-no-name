@@ -64,7 +64,7 @@ const getLinkAttributes = () => {
   .link-card {
     list-style: none;
     display: flex;
-    background-color: white;
+    background-color: var(--surface);
     background-image: var(--accent-gradient);
     background-size: 400%;
     border-radius: 0.5rem;
@@ -81,9 +81,8 @@ const getLinkAttributes = () => {
     text-decoration: none;
     line-height: 1.4;
     border-radius: 0.35rem;
-    color: #111;
-    background-color: white;
-    opacity: 0.8;
+    color: var(--text);
+    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
   }
   h2 {
     margin: 0;
@@ -94,7 +93,7 @@ const getLinkAttributes = () => {
 
   p {
     margin: 0;
-    color: #444;
+    color: var(--text-muted);
   }
 
   .blog-body {

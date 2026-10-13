@@ -1,0 +1,46 @@
+<script is:inline>
+  (() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const normalize = (value) => value === 'light' || value === 'dark' ? value : 'system';
+    let preference = 'system';
+
+    try {
+      preference = normalize(localStorage.getItem('theme'));
+    } catch {
+      // Storage can be unavailable in private or restricted browsing.
+    }
+
+    const applyTheme = () => {
+      document.documentElement.dataset.theme = preference === 'system'
+        ? (media.matches ? 'dark' : 'light')
+        : preference;
+      const select = document.querySelector('[data-theme-select]');
+      if (select) select.value = preference;
+      document.querySelector('[data-theme-control]')?.removeAttribute('hidden');
+    };
+
+    document.addEventListener('change', (event) => {
+      if (!(event.target instanceof HTMLSelectElement) || !event.target.matches('[data-theme-select]')) return;
+      preference = normalize(event.target.value);
+      try {
+        if (preference === 'system') localStorage.removeItem('theme');
+        else localStorage.setItem('theme', preference);
+      } catch {
+        // Keep the selection for this page session even without storage.
+      }
+      applyTheme();
+    });
+
+    media.addEventListener('change', () => {
+      if (preference === 'system') applyTheme();
+    });
+    window.addEventListener('storage', (event) => {
+      if (event.key !== 'theme' && event.key !== null) return;
+      preference = normalize(event.newValue);
+      applyTheme();
+    });
+    document.addEventListener('astro:after-swap', applyTheme);
+    document.addEventListener('astro:page-load', applyTheme);
+    applyTheme();
+  })();
+</script>
