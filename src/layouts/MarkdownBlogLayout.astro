@@ -112,7 +112,8 @@ const structuredData = {
 
       h1 {
         font-size: 32px;
-        word-break: break-all;
+        overflow-wrap: anywhere;
+        text-wrap: balance;
         line-height: 1.4;
       }
 
@@ -199,6 +200,10 @@ const structuredData = {
       }
 
       @media (max-width: 639px) {
+        h1 {
+          font-size: clamp(1.5rem, 7vw, 1.75rem);
+        }
+
         .article-navigation {
           grid-template-columns: minmax(0, 1fr);
           gap: 8px;
