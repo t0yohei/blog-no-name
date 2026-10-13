@@ -103,10 +103,10 @@ const hatenaUrl = `https://b.hatena.ne.jp/add?${new URLSearchParams({ mode: 'con
     gap: 6px;
     min-height: 44px;
     padding: 8px 12px;
-    border: 1px solid #c5cdd5;
+    border: 1px solid var(--border-strong);
     border-radius: 6px;
-    background: #ffffff;
-    color: #374151;
+    background: var(--surface);
+    color: var(--text);
     font: inherit;
     font-size: 14px;
     line-height: 1.5;
@@ -116,14 +116,14 @@ const hatenaUrl = `https://b.hatena.ne.jp/add?${new URLSearchParams({ mode: 'con
 
   a:hover,
   button:hover {
-    background: #f1f5f9;
-    border-color: #65717b;
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
   }
 
   a:focus-visible,
   button:focus-visible,
   input:focus-visible {
-    outline: 2px solid #374151;
+    outline: 2px solid var(--focus);
     outline-offset: 3px;
   }
 
@@ -139,16 +139,17 @@ const hatenaUrl = `https://b.hatena.ne.jp/add?${new URLSearchParams({ mode: 'con
   .status {
     min-height: 1.8em;
     margin-top: 8px;
-    color: #4b5563;
+    color: var(--text-muted);
     font-size: 14px;
   }
 
   input {
     width: 100%;
     padding: 8px;
-    border: 1px solid #c5cdd5;
+    border: 1px solid var(--border-strong);
     border-radius: 6px;
-    color: #374151;
+    background: var(--surface);
+    color: var(--text);
     font: inherit;
     font-size: 14px;
   }

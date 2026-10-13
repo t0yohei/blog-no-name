@@ -1,6 +1,90 @@
+:root {
+  color-scheme: light;
+  --background: #f1f5f9;
+  --surface: #ffffff;
+  --surface-hover: #f1f5f9;
+  --text: #202833;
+  --text-muted: #4b5967;
+  --link: #1e40af;
+  --link-visited: #6d28d9;
+  --border: #dde4eb;
+  --border-strong: #81909f;
+  --focus: #6d28d9;
+  --underline: #94a3b8;
+  --code-background: rgba(175, 184, 193, 0.2);
+  --icon-background: transparent;
+  --accent: 124, 58, 237;
+  --accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, var(--surface) 60%);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background: #10151d;
+  --surface: #1a2230;
+  --surface-hover: #263244;
+  --text: #e5eaf2;
+  --text-muted: #adb8c8;
+  --link: #9fc5ff;
+  --link-visited: #c4b5fd;
+  --border: #38465a;
+  --border-strong: #728097;
+  --focus: #c4b5fd;
+  --underline: #8392a8;
+  --code-background: rgba(175, 184, 193, 0.15);
+  --icon-background: #f1f5f9;
+  --accent: 196, 181, 253;
+}
+
+/* Follow the system preference when JavaScript is disabled or unavailable. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --background: #10151d;
+    --surface: #1a2230;
+    --surface-hover: #263244;
+    --text: #e5eaf2;
+    --text-muted: #adb8c8;
+    --link: #9fc5ff;
+    --link-visited: #c4b5fd;
+    --border: #38465a;
+    --border-strong: #728097;
+    --focus: #c4b5fd;
+    --underline: #8392a8;
+    --code-background: rgba(175, 184, 193, 0.15);
+    --icon-background: #f1f5f9;
+    --accent: 196, 181, 253;
+  }
+
+  :root:not([data-theme]) .astro-code,
+  :root:not([data-theme]) .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}
+
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
 html {
-  background-color: #f1f5f9;
+  background-color: var(--background);
+  color: var(--text);
   font-family: -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif,"Segoe UI Emoji";
+}
+
+a {
+  color: var(--link);
+}
+
+a:visited {
+  color: var(--link-visited);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
 img {
@@ -27,7 +111,7 @@ code {
 }
 
 p code {
-  background-color: rgba(175,184,193,0.2);
+  background-color: var(--code-background);
   padding: 2px 4px;;
   font-size: .9em;
   border-radius: 6px;
@@ -55,7 +139,7 @@ main {
   margin: auto;
   padding: 24px 20px;
   line-height: 1.8;
-  color: #000000d1;
+  color: var(--text);
 
   max-width: 60ch;
 }

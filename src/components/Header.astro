@@ -3,14 +3,47 @@
   <a href="/about">About</a>
   <a href="/app">App</a>
   <a href="https://github.com/t0yohei/Curriculum-Vitae" target="_blank" rel="noopener noopener">Job</a>
+  <label class="theme-control" data-theme-control hidden>
+    <span>テーマ</span>
+    <select data-theme-select>
+      <option value="system">システム</option>
+      <option value="light">ライト</option>
+      <option value="dark">ダーク</option>
+    </select>
+  </label>
 </header>
 <style>
   header {
     padding: 10px 20px;
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     align-items: center;
     border-bottom: solid 2px;
     font-size: 1.3em;
+  }
+
+  .theme-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .theme-control[hidden] {
+    display: none;
+  }
+
+  select {
+    min-height: 44px;
+    padding: 6px 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
   }
 </style>

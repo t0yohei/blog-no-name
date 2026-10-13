@@ -38,7 +38,7 @@ const template = `
           <th>Links</th>
           <td class="link-icons">
             <a href="https://x.com/${id}"><img src="/img/x-b.png" alt="x icon" class="link-icon" /></a>
-            <a href="https://github.com/${id}"><img src="/img/github.svg" alt="github icon"/></a>
+            <a href="https://github.com/${id}"><img src="/img/github.svg" alt="github icon" class="link-icon" /></a>
             <a href="https://speakerdeck.com/${id}"><img src="/img/speakerdeck.png" alt="speakerdeck icon" class="link-icon" /></a>
             <a href="https://qiita.com/${id}"><img src="/img/qiita.png" alt="qiita icon" class="link-icon" /></a>
             <a href="https://zenn.dev/${id}"><img src="/img/zenn.svg" alt="zenn icon" class="link-icon" /></a>
@@ -86,6 +86,23 @@ const template = `
   .link-icon {
     width: 40px;
     height: 40px;
+    padding: 4px;
+    box-sizing: border-box;
+  }
+
+  .link-icons a {
+    display: inline-flex;
+    border-radius: 6px;
+    background: var(--icon-background);
+  }
+
+  a {
+    color: var(--link);
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
   }
   </style>
 `;

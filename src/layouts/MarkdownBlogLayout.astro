@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import ThemeScript from '../components/ThemeScript.astro';
 import ArticleShare from '../components/ArticleShare.astro';
 import '../styles/global.css';
 import { ClientRouter, slide } from 'astro:transitions';
@@ -39,6 +40,7 @@ const structuredData = {
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <ThemeScript />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -102,7 +104,7 @@ const structuredData = {
     </main>
     <style>
       main {
-        background-color: #ffffff;
+        background-color: var(--surface);
         margin-top: 40px;
         border-radius: 8px;
       }
@@ -114,14 +116,14 @@ const structuredData = {
       }
 
       p {
-        color: #65717b;
+        color: var(--text-muted);
         text-align: right;
       }
 
       footer {
         margin-top: 64px;
         padding-top: 24px;
-        border-top: 1px solid #dde4eb;
+        border-top: 1px solid var(--border);
       }
 
       .article-navigation {
@@ -136,7 +138,7 @@ const structuredData = {
         align-items: flex-start;
         padding: 20px 16px;
         border-radius: 8px;
-        color: #26323d;
+        color: var(--text);
         text-decoration: none;
       }
 
@@ -150,7 +152,7 @@ const structuredData = {
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #65717b;
+        color: var(--text-muted);
         font-size: 0.875rem;
       }
 
@@ -161,22 +163,22 @@ const structuredData = {
         overflow-wrap: anywhere;
         text-wrap: balance;
         text-decoration: underline;
-        text-decoration-color: #94a3b8;
+        text-decoration-color: var(--underline);
         text-underline-offset: 0.2em;
       }
 
       time {
         margin-top: auto;
-        color: #65717b;
+        color: var(--text-muted);
         font-size: 0.8125rem;
       }
 
       .article-link:is(:hover, :focus-visible) {
-        background-color: #f1f5f9;
+        background-color: var(--surface-hover);
       }
 
       .article-link:is(:hover, :focus-visible) .article-title {
-        color: #1e40af;
+        color: var(--link);
         text-decoration-color: currentColor;
       }
 
@@ -185,13 +187,13 @@ const structuredData = {
         width: fit-content;
         margin: 32px auto 0;
         padding: 10px;
-        color: #65717b;
+        color: var(--text-muted);
         font-size: 0.875rem;
         text-underline-offset: 0.2em;
       }
 
       footer a:focus-visible {
-        outline: 2px solid #334155;
+        outline: 2px solid var(--focus);
         outline-offset: 4px;
       }
 
@@ -208,7 +210,7 @@ const structuredData = {
         }
 
         .next + .previous {
-          border-top: 1px solid #dde4eb;
+          border-top: 1px solid var(--border);
         }
       }
     </style>
