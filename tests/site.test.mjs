@@ -145,7 +145,7 @@ test('the index offers recent posts and a complete chronological yearly archive'
   const recent = html.match(/<section\b[^>]*aria-labelledby="recent-heading"[^>]*>([\s\S]*?)<\/section>/)[1];
   const archive = html.match(/<section\b[^>]*aria-labelledby="archive-heading"[^>]*>([\s\S]*)/)[1];
   const cardsIn = (fragment) =>
-    [...fragment.matchAll(/<li\b[^>]*class="link-card"[^>]*>([\s\S]*?)<\/li>/g)].map(([, card]) => {
+    [...fragment.matchAll(/<li\b[^>]*class="link-card(?:\s[^"]*)?"[^>]*>([\s\S]*?)<\/li>/g)].map(([, card]) => {
       const [, href, attributes] = card.match(/<a\b[^>]*href="([^"]+)"([^>]*)>/);
       assert.match(card, /class="source-label"[^>]*>\s*(Blog|Qiita|Zenn|dev\.to|Speaker Deck)\s*<\/span>/);
       if (href.startsWith('blogs/')) {
@@ -163,6 +163,9 @@ test('the index offers recent posts and a complete chronological yearly archive'
   assert.deepEqual(recentCards, archiveCards.slice(0, 6));
   assert.match(recent, /<h3\b[^>]*class="card-title"/);
   assert.match(archive, /<h4\b[^>]*class="card-title"/);
+  assert.equal((recent.match(/class="blog-body"/g) ?? []).length, 6);
+  assert.doesNotMatch(archive, /class="blog-body"/);
+  assert.match(archive, /class="archive-list"/);
   const files = await readdir(new URL('../src/content/blog/', import.meta.url));
   assert.deepEqual(
     archiveCards
