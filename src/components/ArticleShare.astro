@@ -15,18 +15,23 @@ const hatenaUrl = `https://b.hatena.ne.jp/add?${new URLSearchParams({ mode: 'con
   <h2 id="article-share-heading">この記事を共有</h2>
   <article-share>
     <div class="actions">
-      <a href={xUrl} target="_blank" rel="noopener noreferrer" aria-label="Xで共有（新しいタブで開きます）">
+      <a
+        href={xUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Xで共有（新しいタブで開きます）"
+        title="Xで共有"
+      >
         <Icon name="x" size={18} aria-hidden="true" />
-        Xで共有
       </a>
       <a
         href={hatenaUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="はてなブックマークに登録（新しいタブで開きます）"
+        title="はてなブックマークに登録"
       >
         <Icon name="hatena-bookmark" size={18} aria-hidden="true" />
-        はてなブックマーク
       </a>
       <button type="button" data-url={url} hidden>
         <Icon name="mdi:link-variant" size={18} aria-hidden="true" />
