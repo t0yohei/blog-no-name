@@ -63,27 +63,27 @@ const structuredData = {
       <footer>
         {(previousEntry || nextEntry) && (
           <nav class="article-navigation" aria-label="前後の記事">
-            {previousEntry && (
-              <a class="article-link previous" href={`/blogs/${previousEntry.id}`} rel="prev">
-                <span class="direction">
-                  <Icon name="mdi:arrow-left" size={20} aria-hidden="true" />
-                  前の記事
-                </span>
-                <strong class="article-title">{previousEntry.data.title}</strong>
-                <time datetime={previousEntry.data.pubdate.toISOString()}>
-                  {previousEntry.data.pubdate.toISOString().slice(0, 10)}
-                </time>
-              </a>
-            )}
             {nextEntry && (
               <a class="article-link next" href={`/blogs/${nextEntry.id}`} rel="next">
                 <span class="direction">
+                  <Icon name="mdi:arrow-left" size={20} aria-hidden="true" />
                   次の記事
-                  <Icon name="mdi:arrow-right" size={20} aria-hidden="true" />
                 </span>
                 <strong class="article-title">{nextEntry.data.title}</strong>
                 <time datetime={nextEntry.data.pubdate.toISOString()}>
                   {nextEntry.data.pubdate.toISOString().slice(0, 10)}
+                </time>
+              </a>
+            )}
+            {previousEntry && (
+              <a class="article-link previous" href={`/blogs/${previousEntry.id}`} rel="prev">
+                <span class="direction">
+                  前の記事
+                  <Icon name="mdi:arrow-right" size={20} aria-hidden="true" />
+                </span>
+                <strong class="article-title">{previousEntry.data.title}</strong>
+                <time datetime={previousEntry.data.pubdate.toISOString()}>
+                  {previousEntry.data.pubdate.toISOString().slice(0, 10)}
                 </time>
               </a>
             )}
@@ -134,7 +134,7 @@ const structuredData = {
         text-decoration: none;
       }
 
-      .next {
+      .previous {
         grid-column: 2;
         align-items: flex-end;
         text-align: right;
@@ -195,13 +195,13 @@ const structuredData = {
           gap: 8px;
         }
 
-        .next {
+        .previous {
           grid-column: 1;
           align-items: flex-start;
           text-align: left;
         }
 
-        .previous + .next {
+        .next + .previous {
           border-top: 1px solid #dde4eb;
         }
       }
