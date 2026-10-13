@@ -153,6 +153,10 @@ const structuredData = {
         font-size: 1.125rem;
         line-height: 1.65;
         overflow-wrap: anywhere;
+        text-wrap: balance;
+        text-decoration: underline;
+        text-decoration-color: #94a3b8;
+        text-underline-offset: 0.2em;
       }
 
       time {
@@ -167,8 +171,7 @@ const structuredData = {
 
       .article-link:is(:hover, :focus-visible) .article-title {
         color: #1e40af;
-        text-decoration: underline;
-        text-underline-offset: 0.2em;
+        text-decoration-color: currentColor;
       }
 
       .back-to-index {
