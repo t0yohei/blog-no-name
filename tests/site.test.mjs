@@ -113,7 +113,7 @@ test('article descriptions use an explicit summary or plain text from existing M
   }
 });
 
-test('BlogPosting describes the article and matches the visible author', async () => {
+test('BlogPosting retains author metadata without displaying an author byline', async () => {
   const html = await (await fetch(`${baseUrl}/blogs/20261012`)).text();
   const scripts = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
   assert.equal(scripts.length, 1);
@@ -130,7 +130,7 @@ test('BlogPosting describes the article and matches the visible author', async (
   assert.equal(data.author['@type'], 'Person');
   assert.equal(data.author.name, 'とよへい(t0yohei)');
   assert.equal(data.author.url, 'https://blog-no-name.com/about');
-  assert.match(html, /<a href="\/about" rel="author"[^>]*>\s*とよへい\(t0yohei\)\s*<\/a>/);
+  assert.doesNotMatch(html, /rel="author"|著者:/);
   assert.equal('dateModified' in data, false);
 });
 
@@ -201,3 +201,38 @@ test('Astro articles link to related local articles with descriptive link text',
     }
   }
 });
+
+for (const [id, previousId, nextId] of [
+  ['20230103_new_year', undefined, '20230104_start_working'],
+  ['20230108_small_update', '20230108_add_webcomponents', '20230119'],
+  ['20250213', '20241224', '20250216'],
+  ['20261012', '20250216', undefined],
+]) {
+  test(`${id} shows chronological neighbors at the end of the article`, async () => {
+    const response = await fetch(`${baseUrl}/blogs/${id}`);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    const footer = html.match(/<footer\b[^>]*>([\s\S]*?)<\/footer>\s*<\/main>/);
+    assert.ok(footer, 'Navigation belongs after the complete article content');
+    assert.match(footer[1], /<nav\b[^>]*aria-label="前後の記事"/);
+    assert.match(footer[1], /ブログ一覧に戻る/);
+    for (const [rel, targetId] of [
+      ['prev', previousId],
+      ['next', nextId],
+    ]) {
+      const link = footer[1].match(new RegExp(`<a[^>]*href="([^"<>]+)"[^>]*rel="${rel}"[^>]*>([\\s\\S]*?)<\\/a>`));
+      if (!targetId) {
+        assert.equal(link, null, `No ${rel} link beyond the collection boundary`);
+        continue;
+      }
+      assert.ok(link, rel);
+      assert.equal(link[1], `/blogs/${targetId}`);
+      const target = await fetch(new URL(link[1], baseUrl));
+      assert.equal(target.status, 200);
+      const targetHtml = await target.text();
+      const title = targetHtml.match(/<title>([^<]+)<\/title>/)[1];
+      assert.ok(link[2].includes(title), 'Neighbor title is shown without truncation');
+      assert.match(link[2], /<time\b[^>]*datetime="[^"]+"[^>]*>\s*\d{4}-\d{2}-\d{2}\s*<\/time>/);
+    }
+  });
+}
