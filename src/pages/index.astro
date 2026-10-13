@@ -41,9 +41,7 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
 
 <HomeLayout title="Blog No Name">
   <main>
-    <h1>
-      Blog <span class="text-gradient">No Name</span>
-    </h1>
+    <h1 class="visually-hidden">Blog No Name</h1>
     <section aria-labelledby="recent-heading" class="recent-posts">
       <div class="section-heading">
         <h2 id="recent-heading">最近の記事</h2>
@@ -77,6 +75,17 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
 </HomeLayout>
 
 <style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
   .section-heading {
     display: flex;
     align-items: baseline;
@@ -123,13 +132,6 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-  .text-gradient {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    background-position: 0%;
   }
   .instructions {
     line-height: 1.6;

@@ -65,6 +65,14 @@ for (const [path, title, type] of [
     for (const preference of ['system', 'light', 'dark']) {
       assert.ok(html.includes(`data-theme-option="${preference}"`));
     }
+    const header = html.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)[1];
+    assert.match(header, /<a\b[^>]*class="site-name"[^>]*href="\/"[^>]*>\s*Blog No Name\s*<\/a>/);
+    assert.match(header, /<nav\b[^>]*aria-label="メインナビゲーション"/);
+    const currentHref = path.startsWith('/blogs/') ? '/' : path;
+    const currentValue = type === 'article' ? 'location' : 'page';
+    assert.match(header, new RegExp(`<a\\b[^>]*href="${currentHref}"[^>]*aria-current="${currentValue}"`));
+    assert.equal((header.match(/aria-current=/g) ?? []).length, 1);
+    assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
     assert.ok(html.includes(`<title>${title}</title>`));
     assert.ok(html.includes(`property="og:title" content="${title}"`));
     assert.ok(html.includes(`property="og:type" content="${type}"`));
