@@ -22,6 +22,14 @@ test('an explicit summary takes precedence, and empty Markdown falls back to the
 test('external article descriptions retain their existing source', () => {
   assert.equal(parseDescription({ collection: 'qiitas', data: { body: 'Qiita 本文' } }), 'Qiita 本文');
   assert.equal(parseDescription({ collection: 'zenns', data: { description: 'Zenn 説明' } }), 'Zenn 説明');
+  assert.equal(
+    parseDescription({
+      collection: 'zenns',
+      id: 'https://zenn.dev/t0yohei/articles/5aecc668e4e9c6',
+      data: { description: '!\n日本語音声の Local STT は…\n\nモデルの比較です。' },
+    }),
+    'Mac上でfaster-whisperとmlx-whisperの処理速度・認識精度を比較。',
+  );
 });
 
 test('external summaries remove Markdown and HTML before truncation', () => {

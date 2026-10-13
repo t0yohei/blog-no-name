@@ -12,6 +12,10 @@ export const parseDate = (post: Post) => {
 
 export const parseDescription = (post: Post) => {
   if (post.collection === 'blogs' && post.data.description) return post.data.description;
+  // This feed excerpt starts with an advisory rather than the comparison's purpose.
+  if (post.collection === 'zenns' && post.id === 'https://zenn.dev/t0yohei/articles/5aecc668e4e9c6') {
+    return 'Mac上でfaster-whisperとmlx-whisperの処理速度・認識精度を比較。';
+  }
 
   const source =
     post.collection === 'blogs'
