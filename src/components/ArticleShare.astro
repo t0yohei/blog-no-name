@@ -1,0 +1,150 @@
+---
+import { Icon } from 'astro-icon/components';
+
+type Props = {
+  title: string;
+  url: string;
+};
+
+const { title, url } = Astro.props;
+const xUrl = `https://twitter.com/intent/tweet?${new URLSearchParams({ text: title, url })}`;
+const hatenaUrl = `https://b.hatena.ne.jp/add?${new URLSearchParams({ mode: 'confirm', url, title })}`;
+---
+
+<section aria-labelledby="article-share-heading">
+  <h2 id="article-share-heading">この記事を共有</h2>
+  <article-share>
+    <div class="actions">
+      <a href={xUrl} target="_blank" rel="noopener noreferrer" aria-label="Xで共有（新しいタブで開きます）">
+        <Icon name="x" size={18} aria-hidden="true" />
+        Xで共有
+      </a>
+      <a
+        href={hatenaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="はてなブックマークに登録（新しいタブで開きます）"
+      >
+        <Icon name="hatena-bookmark" size={18} aria-hidden="true" />
+        はてなブックマーク
+      </a>
+      <button type="button" data-url={url} hidden>
+        <Icon name="mdi:link-variant" size={18} aria-hidden="true" />
+        リンクをコピー
+      </button>
+    </div>
+    <div class="status" role="status"></div>
+    <input type="text" aria-label="共有する記事のURL" value={url} readonly hidden />
+  </article-share>
+</section>
+
+<script>
+  class ArticleShare extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector('button');
+      const status = this.querySelector<HTMLElement>('[role="status"]');
+      const fallback = this.querySelector('input');
+      if (!button || !status || !fallback) return;
+
+      button.hidden = false;
+      button.onclick = async () => {
+        button.disabled = true;
+        status.textContent = '';
+        fallback.hidden = true;
+        try {
+          await navigator.clipboard.writeText(button.dataset.url!);
+          status.textContent = 'リンクをコピーしました';
+        } catch {
+          status.textContent = 'コピーできませんでした。下のURLを選択してコピーしてください。';
+          fallback.hidden = false;
+          fallback.focus();
+          fallback.select();
+        } finally {
+          button.disabled = false;
+        }
+      };
+    }
+  }
+
+  customElements.define('article-share', ArticleShare);
+</script>
+
+<style>
+  section {
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  article-share {
+    display: block;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  a,
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid #c5cdd5;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a:hover,
+  button:hover {
+    background: #f1f5f9;
+    border-color: #65717b;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid #374151;
+    outline-offset: 3px;
+  }
+
+  button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+
+  [hidden] {
+    display: none;
+  }
+
+  .status {
+    min-height: 1.8em;
+    margin-top: 8px;
+    color: #4b5563;
+    font-size: 14px;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #c5cdd5;
+    border-radius: 6px;
+    color: #374151;
+    font: inherit;
+    font-size: 14px;
+  }
+</style>
