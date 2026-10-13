@@ -11,24 +11,78 @@
     }
 
     const applyTheme = () => {
-      document.documentElement.dataset.theme = preference === 'system'
+      const theme = preference === 'system'
         ? (media.matches ? 'dark' : 'light')
         : preference;
-      const select = document.querySelector('[data-theme-select]');
-      if (select) select.value = preference;
+      document.documentElement.dataset.theme = theme;
+      for (const option of document.querySelectorAll('[data-theme-option]')) {
+        option.setAttribute('aria-checked', String(option.dataset.themeOption === preference));
+      }
+      for (const icon of document.querySelectorAll('[data-theme-icon]')) {
+        icon.hidden = icon.dataset.themeIcon !== theme;
+      }
+      const label = `テーマを選択（現在: ${theme === 'dark' ? 'ダーク' : 'ライト'}）`;
+      const trigger = document.querySelector('[data-theme-trigger]');
+      trigger?.setAttribute('aria-label', label);
+      trigger?.setAttribute('title', label);
       document.querySelector('[data-theme-control]')?.removeAttribute('hidden');
     };
 
-    document.addEventListener('change', (event) => {
-      if (!(event.target instanceof HTMLSelectElement) || !event.target.matches('[data-theme-select]')) return;
-      preference = normalize(event.target.value);
-      try {
-        if (preference === 'system') localStorage.removeItem('theme');
-        else localStorage.setItem('theme', preference);
-      } catch {
-        // Keep the selection for this page session even without storage.
+    const setMenuOpen = (open, restoreFocus = false) => {
+      const menu = document.querySelector('[data-theme-menu]');
+      const trigger = document.querySelector('[data-theme-trigger]');
+      if (menu) menu.hidden = !open;
+      trigger?.setAttribute('aria-expanded', String(open));
+      if (restoreFocus) trigger?.focus();
+    };
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const trigger = event.target.closest('[data-theme-trigger]');
+      const menu = document.querySelector('[data-theme-menu]');
+      if (trigger && menu) {
+        const open = menu.hidden;
+        setMenuOpen(open);
+        if (open) document.querySelector('[data-theme-option][aria-checked="true"]')?.focus();
+        return;
       }
-      applyTheme();
+      const option = event.target.closest('[data-theme-option]');
+      if (option) {
+        preference = normalize(option.dataset.themeOption);
+        try {
+          if (preference === 'system') localStorage.removeItem('theme');
+          else localStorage.setItem('theme', preference);
+        } catch {
+          // Keep the selection for this page session even without storage.
+        }
+        applyTheme();
+        setMenuOpen(false, true);
+      } else if (!document.querySelector('[data-theme-control]')?.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const trigger = event.target.closest('[data-theme-trigger]');
+      const option = event.target.closest('[data-theme-option]');
+      if (!trigger && !option) return;
+      if (event.key === 'Escape' || event.key === 'Tab') {
+        if (event.key === 'Escape') event.preventDefault();
+        setMenuOpen(false, true);
+        return;
+      }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const options = [...document.querySelectorAll('[data-theme-option]')];
+      if (!options.length) return;
+      setMenuOpen(true);
+      const index = options.indexOf(option);
+      const next = event.key === 'Home' ? 0
+        : event.key === 'End' ? options.length - 1
+        : event.key === 'ArrowDown' ? (index + 1) % options.length
+        : (index - 1 + options.length) % options.length;
+      options[trigger && event.key === 'ArrowUp' ? options.length - 1 : next].focus();
     });
 
     media.addEventListener('change', () => {
