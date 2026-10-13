@@ -7,9 +7,11 @@ import QiitaIcon from '../icons/qiita.png';
 export interface Props {
   post: Post;
   headingLevel?: 3 | 4;
+  variant?: 'card' | 'compact';
 }
 
-const { post, headingLevel = 3 } = Astro.props;
+const { post, headingLevel = 3, variant = 'card' } = Astro.props;
+const compact = variant === 'compact';
 const Heading = headingLevel === 4 ? 'h4' : 'h3';
 const sourceName = {
   blogs: 'Blog',
@@ -38,7 +40,7 @@ const getLinkAttributes = () => {
 };
 ---
 
-<li class="link-card">
+<li class:list={['link-card', { compact }]}>
   <a {...getLinkAttributes()}>
     <div class="card-meta">
       <span class="icon-container">
@@ -59,8 +61,8 @@ const getLinkAttributes = () => {
         )}
       </span>
     </div>
-    <Heading class="card-title">{buildPreview(post.data.title, 80)}</Heading>
-    <p class="blog-body">{buildPreview(parseDescription(post))}</p>
+    <Heading class="card-title">{compact ? post.data.title : buildPreview(post.data.title, 80)}</Heading>
+    {!compact && <p class="blog-body">{buildPreview(parseDescription(post))}</p>}
     <p class="pub-date">{parseDate(post)?.toISOString().slice(0, 10)}</p>
   </a>
 </li>
@@ -148,5 +150,66 @@ const getLinkAttributes = () => {
 
   .link-card:is(:hover, :focus-within) .card-title {
     color: rgb(var(--accent));
+  }
+
+  .link-card.compact {
+    display: block;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .compact + .compact {
+    border-top: 1px solid var(--border);
+  }
+
+  .compact > a {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) 8rem;
+    grid-template-areas: 'date title meta';
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding: 12px 4px;
+    background: transparent;
+  }
+
+  .compact > a:is(:hover, :focus-visible) {
+    background-color: var(--surface-hover);
+  }
+
+  .compact .card-title {
+    grid-area: title;
+    padding: 0;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .compact .pub-date {
+    grid-area: date;
+    margin: 0;
+    align-self: center;
+    justify-self: start;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .compact .card-meta {
+    grid-area: meta;
+    justify-self: end;
+    gap: 8px;
+  }
+
+  .compact .icon-container .icon {
+    display: none;
+  }
+
+  @media (max-width: 639px) {
+    .compact > a {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'title title' 'date meta';
+      gap: 8px 12px;
+    }
   }
 </style>

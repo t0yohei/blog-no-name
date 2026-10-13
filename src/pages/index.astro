@@ -65,9 +65,9 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
       {[...postsByYear].map(([year, entries]) => (
         <section aria-labelledby={`year-${year}`} class="archive-year">
           <h3 id={`year-${year}`}>{yearLabel(year)}</h3>
-          <ul role="list" class="link-card-grid">
+          <ul role="list" class="archive-list">
             {entries.map((post) => (
-              <Card post={post} headingLevel={4} />
+              <Card post={post} headingLevel={4} variant="compact" />
             ))}
           </ul>
         </section>
@@ -118,6 +118,11 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
   .archive-year h3 {
     margin: 0 0 16px;
     font-size: 1.25rem;
+  }
+  .archive-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
   .text-gradient {
     background-image: var(--accent-gradient);
