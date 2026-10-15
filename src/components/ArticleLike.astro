@@ -1,0 +1,160 @@
+---
+import { Icon } from 'astro-icon/components';
+
+type Props = { articleId: string };
+const { articleId } = Astro.props;
+---
+
+<article-like data-article-id={articleId}>
+  <button type="button" aria-pressed="false" aria-label="この記事にイイねする" hidden disabled>
+    <span class="outline"><Icon name="mdi:heart-outline" size={20} aria-hidden="true" /></span>
+    <span class="filled"><Icon name="mdi:heart" size={20} aria-hidden="true" /></span>
+    <span data-label>イイね</span>
+    <span class="count" data-count aria-hidden="true">—</span>
+  </button>
+  <span class="status" role="status"></span>
+  <noscript>イイねするにはJavaScriptを有効にしてください。</noscript>
+</article-like>
+
+<script>
+  class ArticleLike extends HTMLElement {
+    private observer?: IntersectionObserver;
+    private controller?: AbortController;
+
+    connectedCallback() {
+      const button = this.querySelector('button')!;
+      const label = this.querySelector<HTMLElement>('[data-label]')!;
+      const count = this.querySelector<HTMLElement>('[data-count]')!;
+      const status = this.querySelector<HTMLElement>('[role="status"]')!;
+      const endpoint = `/api/articles/${encodeURIComponent(this.dataset.articleId!)}/likes`;
+      this.controller = new AbortController();
+      const signal = this.controller.signal;
+      let loaded = false;
+      let liked = false;
+      let pending = false;
+      button.hidden = false;
+
+      const update = async (method = 'GET') => {
+        if (pending) return;
+        pending = true;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
+        status.textContent = '';
+        try {
+          const response = await fetch(endpoint, { method, signal, cache: 'no-store' });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error);
+          if (typeof result.liked !== 'boolean' || !Number.isSafeInteger(result.count) || result.count < 0) {
+            throw new Error('イイねを取得できませんでした。もう一度お試しください。');
+          }
+          loaded = true;
+          liked = result.liked;
+          count.textContent = result.count.toLocaleString('ja-JP');
+          button.setAttribute('aria-pressed', String(liked));
+          button.setAttribute('aria-label', `この記事${liked ? 'のイイねを取り消す' : 'にイイねする'}（${result.count}件）`);
+          label.textContent = liked ? 'イイね済み' : 'イイね';
+          if (method !== 'GET') status.textContent = liked ? 'イイねしました。ありがとうございます！' : 'イイねを取り消しました。';
+        } catch (error) {
+          if (signal.aborted) return;
+          status.textContent = error instanceof Error && error.message && !(error instanceof TypeError) && !(error instanceof SyntaxError)
+            ? error.message
+            : '通信できませんでした。もう一度お試しください。';
+          if (!loaded) label.textContent = '再試行';
+        } finally {
+          pending = false;
+          button.disabled = false;
+          button.removeAttribute('aria-busy');
+        }
+      };
+
+      button.onclick = () => void update(loaded ? (liked ? 'DELETE' : 'PUT') : 'GET');
+      this.observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          this.observer?.disconnect();
+          void update();
+        }
+      });
+      this.observer.observe(this);
+    }
+
+    disconnectedCallback() {
+      this.observer?.disconnect();
+      this.controller?.abort();
+    }
+  }
+
+  customElements.define('article-like', ArticleLike);
+</script>
+
+<style>
+  article-like {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-bottom: 24px;
+  }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  button[aria-pressed='true'] {
+    color: var(--link);
+    border-color: currentColor;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+
+  .outline,
+  .filled {
+    display: inline-flex;
+  }
+
+  .filled,
+  button[aria-pressed='true'] .outline,
+  [hidden] {
+    display: none;
+  }
+
+  button[aria-pressed='true'] .filled {
+    display: inline-flex;
+  }
+
+  .count {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .status,
+  noscript {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+</style>

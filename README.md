@@ -7,6 +7,24 @@
 
 https://blog-no-name.com/
 
+## 記事のイイね
+
+記事末尾から、ログインせずにイイねできます。同じブラウザからは記事ごとに1回だけ登録でき、もう一度押すと取り消せます。匿名IDをHttpOnly Cookieに1年間保存します。別のブラウザを使った場合やCookieを削除した場合は、別の読者として扱います。
+
+イイねはNetlify Databaseに保存します。`@netlify/database`と`netlify/database/migrations/`を含むデプロイでDBを作成し、マイグレーションを適用します。Deploy Previewには本番と別のDBブランチが割り当てられます。
+
+ローカルでは、Netlify CLI 26以降で次のコマンドを実行します。
+
+```sh
+netlify dev
+# 別のターミナルで、ローカルDBにマイグレーションを適用
+netlify database migrations apply
+```
+
+`yarn test`は一時的なローカルDBを起動し、マイグレーション、イイねの追加・取り消し、同時送信の重複防止を検証します。本番DBには接続しません。
+
+イイね数はボタンが画面に入った時に取得します。DBの稼働時間と通信量はNetlifyのクレジットを消費します。
+
 ## OGP 画像
 
 `yarn build` 時に、各記事のタイトルを使った 1200 × 630 ピクセルの PNG を `/og/<記事ID>.png` に生成します。記事の追加・タイトル変更は、次回のビルドで画像に反映されます。

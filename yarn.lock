@@ -1274,6 +1274,8 @@ __metadata:
     "@astrojs/netlify": "npm:^8.2.9"
     "@astrojs/vue": "npm:^7.0.3"
     "@iconify-json/mdi": "npm:^1.2.3"
+    "@netlify/database": "npm:^2.0.1"
+    "@netlify/database-dev": "npm:^1.0.1"
     "@types/node": "npm:^24"
     astro: "npm:^7.3.8"
     astro-icon: "npm:^1.2.0"
@@ -2008,6 +2010,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@neondatabase/serverless@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "@neondatabase/serverless@npm:1.2.0"
+  checksum: 10c0/c220dbd926c64686df47590333cd5e3f39b8d78331021c66ad3c60157396f03ee1ea60db18c2a3e63c71310cc64e04fb4f4a56d30976ca1dc0e6ae6ad3bad419
+  languageName: node
+  linkType: hard
+
 "@netlify/ai@npm:^1.0.1":
   version: 1.0.1
   resolution: "@netlify/ai@npm:1.0.1"
@@ -2089,13 +2098,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/database-dev@npm:1.0.1":
+"@netlify/database-dev@npm:1.0.1, @netlify/database-dev@npm:^1.0.1":
   version: 1.0.1
   resolution: "@netlify/database-dev@npm:1.0.1"
   dependencies:
     "@electric-sql/pglite": "npm:^0.3.15"
     pg-gateway: "npm:0.3.0-beta.4"
   checksum: 10c0/d800577a508371dbbe2d86e5b8162dd433822d46841288550de2d370d18cf6bef97051be453930ecc42f94cbc18a13996b94a95394cf457bae694ebc5cf9d512
+  languageName: node
+  linkType: hard
+
+"@netlify/database@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@netlify/database@npm:2.0.1"
+  dependencies:
+    "@neondatabase/serverless": "npm:^1.1.0"
+    "@netlify/runtime-utils": "npm:3.0.0"
+    pg: "npm:^8.13.0"
+    waddler: "npm:^0.1.1"
+    ws: "npm:^8.18.0"
+  checksum: 10c0/6d0cf7bd60e70e033e91ca17d4e4daf597f2bf72c896ddf4fc5d2970392ca998885c4b287e1d932d417f544e90f93712a682b084d398080b09b9ed00384aa897
   languageName: node
   linkType: hard
 
@@ -9068,10 +9090,91 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pg-cloudflare@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "pg-cloudflare@npm:1.4.1"
+  checksum: 10c0/32e62c987073472e81c0dc218f850b1212b4e2c1f35d50433d87d054fe268f549ebaf8fc6c1227ab24c12b318f3e3a2a191ffbdfb2daa30b39aa6802ab8fe2f6
+  languageName: node
+  linkType: hard
+
+"pg-connection-string@npm:^2.14.1":
+  version: 2.14.1
+  resolution: "pg-connection-string@npm:2.14.1"
+  checksum: 10c0/7321eed97579b4972a714909e7a444beb2186780fe7fd86ea719ff7c8f1fad07d7e5f85722c4992245b23683ed7d2fe2bdda8f7469fed4c016bb5c3379c575ca
+  languageName: node
+  linkType: hard
+
 "pg-gateway@npm:0.3.0-beta.4":
   version: 0.3.0-beta.4
   resolution: "pg-gateway@npm:0.3.0-beta.4"
   checksum: 10c0/28c5dd9b6f56de97c84d9e69418106ca60ee23dada4fd1cc61d6db43add118008f1c7aed50167b60b71c0e546d35c794cbd7e465bfc3d3e6f709dd04f3018103
+  languageName: node
+  linkType: hard
+
+"pg-int8@npm:1.0.1":
+  version: 1.0.1
+  resolution: "pg-int8@npm:1.0.1"
+  checksum: 10c0/be6a02d851fc2a4ae3e9de81710d861de3ba35ac927268973eb3cb618873a05b9424656df464dd43bd7dc3fc5295c3f5b3c8349494f87c7af50ec59ef14e0b98
+  languageName: node
+  linkType: hard
+
+"pg-pool@npm:^3.14.0":
+  version: 3.14.0
+  resolution: "pg-pool@npm:3.14.0"
+  peerDependencies:
+    pg: ">=8.0"
+  checksum: 10c0/3dd706e67e3b317e29409d9eb3bd44e960eabd86db2a9711a9391bbd43881f8ce7a5f7054a341509558ee05e9bf0a3cc7aef037039da0790ce1e16762ade3ba6
+  languageName: node
+  linkType: hard
+
+"pg-protocol@npm:^1.16.1":
+  version: 1.16.1
+  resolution: "pg-protocol@npm:1.16.1"
+  checksum: 10c0/84e8bf05c3548c8ffcad29247c075f8f1cf477600c92a7eb0ab27c6c4cbdbe1280433582bfba91f629b1f68bcaf4ae26436a898f430e884d7887543931e8ade6
+  languageName: node
+  linkType: hard
+
+"pg-types@npm:2.2.0":
+  version: 2.2.0
+  resolution: "pg-types@npm:2.2.0"
+  dependencies:
+    pg-int8: "npm:1.0.1"
+    postgres-array: "npm:~2.0.0"
+    postgres-bytea: "npm:~1.0.0"
+    postgres-date: "npm:~1.0.4"
+    postgres-interval: "npm:^1.1.0"
+  checksum: 10c0/ab3f8069a323f601cd2d2279ca8c425447dab3f9b61d933b0601d7ffc00d6200df25e26a4290b2b0783b59278198f7dd2ed03e94c4875797919605116a577c65
+  languageName: node
+  linkType: hard
+
+"pg@npm:^8.13.0":
+  version: 8.23.1
+  resolution: "pg@npm:8.23.1"
+  dependencies:
+    pg-cloudflare: "npm:^1.4.1"
+    pg-connection-string: "npm:^2.14.1"
+    pg-pool: "npm:^3.14.0"
+    pg-protocol: "npm:^1.16.1"
+    pg-types: "npm:2.2.0"
+    pgpass: "npm:1.0.5"
+  peerDependencies:
+    pg-native: ">=3.0.1"
+  dependenciesMeta:
+    pg-cloudflare:
+      optional: true
+  peerDependenciesMeta:
+    pg-native:
+      optional: true
+  checksum: 10c0/084ce2bcd025705105d4d9a4c4438b178117acbaae5c766e3d3c9fb812cc55d826a212189e19937b8e3b0a8914a3c3e4ba78ad62af73890f37406a676c1f9e0c
+  languageName: node
+  linkType: hard
+
+"pgpass@npm:1.0.5":
+  version: 1.0.5
+  resolution: "pgpass@npm:1.0.5"
+  dependencies:
+    split2: "npm:^4.1.0"
+  checksum: 10c0/5ea6c9b2de04c33abb08d33a2dded303c4a3c7162a9264519cbe85c0a9857d712463140ba42fad0c7cd4b21f644dd870b45bb2e02fcbe505b4de0744fd802c1d
   languageName: node
   linkType: hard
 
@@ -9152,6 +9255,36 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.2"
   checksum: 10c0/5d0c45a511e8ede0fe124d04885877525e69e3c1476f0c8c22ed53f3945bace9ca5ef8578274bdfe916b1cd0301253a52c5dbd8695115fae805cee55465088fc
+  languageName: node
+  linkType: hard
+
+"postgres-array@npm:~2.0.0":
+  version: 2.0.0
+  resolution: "postgres-array@npm:2.0.0"
+  checksum: 10c0/cbd56207e4141d7fbf08c86f2aebf21fa7064943d3f808ec85f442ff94b48d891e7a144cc02665fb2de5dbcb9b8e3183a2ac749959e794b4a4cfd379d7a21d08
+  languageName: node
+  linkType: hard
+
+"postgres-bytea@npm:~1.0.0":
+  version: 1.0.1
+  resolution: "postgres-bytea@npm:1.0.1"
+  checksum: 10c0/10b28a27c9d703d5befd97c443e62b551096d1014bc59ab574c65bf0688de7f3f068003b2aea8dcff83cf0f6f9a35f9f74457c38856cf8eb81b00cf3fb44f164
+  languageName: node
+  linkType: hard
+
+"postgres-date@npm:~1.0.4":
+  version: 1.0.7
+  resolution: "postgres-date@npm:1.0.7"
+  checksum: 10c0/0ff91fccc64003e10b767fcfeefb5eaffbc522c93aa65d5051c49b3c4ce6cb93ab091a7d22877a90ad60b8874202c6f1d0f935f38a7235ed3b258efd54b97ca9
+  languageName: node
+  linkType: hard
+
+"postgres-interval@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "postgres-interval@npm:1.2.0"
+  dependencies:
+    xtend: "npm:^4.0.0"
+  checksum: 10c0/c1734c3cb79e7f22579af0b268a463b1fa1d084e742a02a7a290c4f041e349456f3bee3b4ee0bb3f226828597f7b76deb615c1b857db9a742c45520100456272
   languageName: node
   linkType: hard
 
@@ -10369,6 +10502,13 @@ __metadata:
     structured-source: "npm:^3.0.2"
     technical-word-rules: "npm:^1.4.2"
   checksum: 10c0/0dd1ff9a6ba9094d9a71e07518e7a60a80ed6ceeae353ad139e4e734ad275dd241bcdf9ebf7751206d4ab28f7c0c1b7540f73bf3fbc92ff100140666bf012ecf
+  languageName: node
+  linkType: hard
+
+"split2@npm:^4.1.0":
+  version: 4.2.0
+  resolution: "split2@npm:4.2.0"
+  checksum: 10c0/b292beb8ce9215f8c642bb68be6249c5a4c7f332fc8ecadae7be5cbdf1ea95addc95f0459ef2e7ad9d45fd1064698a097e4eb211c83e772b49bc0ee423e91534
   languageName: node
   linkType: hard
 
@@ -12374,6 +12514,73 @@ __metadata:
   languageName: node
   linkType: hard
 
+"waddler@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "waddler@npm:0.1.1"
+  peerDependencies:
+    "@clickhouse/client": ^1.11.2
+    "@duckdb/node-api": ^1.1.2-alpha.4
+    "@electric-sql/pglite": ^0.2.17
+    "@libsql/client": ^0.15.4
+    "@libsql/client-wasm": ^0.15.4
+    "@neondatabase/serverless": ^1.0.0
+    "@planetscale/database": ^1.19.0
+    "@tidbcloud/serverless": ^0.2.0
+    "@vercel/postgres": ^0.10.0
+    "@xata.io/client": ^0.30.1
+    better-sqlite3: ^11.9.1
+    bun-types: "*"
+    duckdb: ^1.2.1
+    gel: ^2.0.2
+    mysql2: ^3.14.0
+    pg: ^8.14.0
+    pg-query-stream: ^4.8.0
+    postgres: ^3.4.5
+  peerDependenciesMeta:
+    "@clickhouse/client":
+      optional: true
+    "@cloudflare/workers-types":
+      optional: true
+    "@duckdb/node-api":
+      optional: true
+    "@electric-sql/pglite":
+      optional: true
+    "@libsql/client":
+      optional: true
+    "@libsql/client-wasm":
+      optional: true
+    "@neondatabase/serverless":
+      optional: true
+    "@op-engineering/op-sqlite":
+      optional: true
+    "@planetscale/database":
+      optional: true
+    "@tidbcloud/serverless":
+      optional: true
+    "@vercel/postgres":
+      optional: true
+    "@xata.io/client":
+      optional: true
+    better-sqlite3:
+      optional: true
+    bun-types:
+      optional: true
+    duckdb:
+      optional: true
+    gel:
+      optional: true
+    mysql2:
+      optional: true
+    pg:
+      optional: true
+    pg-query-stream:
+      optional: true
+    postgres:
+      optional: true
+  checksum: 10c0/db836bf015d1747ebeb45c9ba1cbb6701d2e54355eed445ef5cdd2c04f25401ecce39c9ddcf824332910cdf22a4e69b9be699317fea8931acd0bed3fb821de6d
+  languageName: node
+  linkType: hard
+
 "web-namespaces@npm:^1.1.2":
   version: 1.1.4
   resolution: "web-namespaces@npm:1.1.4"
@@ -12562,6 +12769,21 @@ __metadata:
     imurmurhash: "npm:^0.1.4"
     slide: "npm:^1.1.5"
   checksum: 10c0/6f6270708f12e9bba36c527da3f06e4e11146681947b00732695f769f23651713e085e88a5e0f8d04f40d131ed1f1f588d9eeade3a0f862fe8a91f4b4a15a23c
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.18.0":
+  version: 8.22.0
+  resolution: "ws@npm:8.22.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 10c0/7304d14ef38898dd366a528a85e2da389c4eebf30f4ce8a007bd2dce6025f9b619cefe44fe2354f0bad0ec541b1c9a4da06a3f3e046ab56f01fd52d5784ecfb2
   languageName: node
   linkType: hard
 
