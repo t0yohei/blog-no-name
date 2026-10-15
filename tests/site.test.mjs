@@ -4,12 +4,18 @@ import { once } from 'node:events';
 import { readdir } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
+import { NetlifyDB } from '@netlify/database-dev';
 
 const baseUrl = 'http://127.0.0.1:4322';
 let server;
 let serverLog = '';
+const database = new NetlifyDB({ logger() {} });
+let databaseRunning = false;
 
 before(async () => {
+  const connectionString = await database.start();
+  databaseRunning = true;
+  await database.applyMigrations(new URL('../netlify/database/migrations/', import.meta.url).pathname);
   server = spawn(process.execPath, [
     'node_modules/.bin/astro',
     'dev',
@@ -18,7 +24,7 @@ before(async () => {
     '--port',
     '4322',
     '--ignore-lock',
-  ]);
+  ], { env: { ...process.env, NETLIFY_DEV: 'true', NETLIFY_DB_URL: connectionString, NETLIFY_DB_DRIVER: 'server' } });
   for (const stream of [server.stdout, server.stderr]) {
     stream.on('data', (chunk) => {
       serverLog = (serverLog + chunk).slice(-10000);
@@ -46,6 +52,58 @@ after(async () => {
     server.kill('SIGTERM');
     await exited;
   }
+  if (databaseRunning) await database.stop();
+});
+
+test('article likes persist, deduplicate concurrent retries, and can be removed', async () => {
+  const endpoint = `${baseUrl}/api/articles/20261012/likes`;
+  const initial = await fetch(endpoint);
+  assert.equal(initial.status, 200, serverLog);
+  assert.match(initial.headers.get('cache-control'), /private, no-store/);
+  const setCookie = initial.headers.get('set-cookie');
+  assert.match(setCookie, /HttpOnly/i);
+  assert.match(setCookie, /SameSite=Lax/i);
+  const cookie = setCookie.split(';')[0];
+  assert.deepEqual(await initial.json(), { count: 0, liked: false });
+  const headers = { cookie, origin: baseUrl };
+  const update = (method, requestHeaders = headers) => fetch(endpoint, { method, headers: requestHeaders });
+
+  const retries = await Promise.all(Array.from({ length: 8 }, () => update('PUT')));
+  assert.ok(retries.every(response => response.status === 200));
+  for (const response of retries) assert.deepEqual(await response.json(), { count: 1, liked: true });
+  assert.deepEqual(await (await fetch(endpoint, { headers })).json(), { count: 1, liked: true });
+
+  const other = await fetch(endpoint);
+  const otherHeaders = { cookie: other.headers.get('set-cookie').split(';')[0], origin: baseUrl };
+  assert.deepEqual(await other.json(), { count: 1, liked: false });
+  assert.deepEqual(await (await update('PUT', otherHeaders)).json(), { count: 2, liked: true });
+
+  const removals = await Promise.all(Array.from({ length: 4 }, () => update('DELETE')));
+  for (const response of removals) assert.deepEqual(await response.json(), { count: 1, liked: false });
+  assert.deepEqual(await (await fetch(endpoint, { headers: otherHeaders })).json(), { count: 1, liked: true });
+  assert.deepEqual(await (await update('DELETE', otherHeaders)).json(), { count: 0, liked: false });
+  const otherArticle = await fetch(`${baseUrl}/api/articles/20250216/likes`, { headers });
+  assert.deepEqual(await otherArticle.json(), { count: 0, liked: false });
+});
+
+test('article likes reject unknown articles, unsupported methods, and cross-site writes', async () => {
+  const endpoint = `${baseUrl}/api/articles/20261012/likes`;
+  assert.equal((await fetch(`${baseUrl}/api/articles/no-such-article/likes`)).status, 404);
+  const unsupported = await fetch(endpoint, { method: 'POST' });
+  assert.equal(unsupported.status, 405);
+  assert.equal(unsupported.headers.get('allow'), 'GET, PUT, DELETE');
+  for (const method of ['PUT', 'DELETE']) {
+    for (const origin of [undefined, 'https://other.example', 'null']) {
+      assert.equal((await fetch(endpoint, { method, headers: origin ? { origin } : {} })).status, 403);
+    }
+    assert.equal((await fetch(endpoint, { method, headers: { origin: baseUrl } })).status, 400);
+    assert.equal((await fetch(endpoint, {
+      method, headers: { origin: baseUrl, cookie: 'article_like_browser=invalid' },
+    })).status, 400);
+  }
+  const response = await fetch(endpoint, { headers: { cookie: 'article_like_browser=invalid' } });
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get('set-cookie'), /article_like_browser=[0-9a-f-]+;/);
 });
 
 for (const [path, title, type] of [
@@ -307,3 +365,13 @@ for (const [id, previousId, nextId] of [
     }
   });
 }
+
+test('a database outage leaves articles readable and returns a retryable API error', async () => {
+  await database.stop();
+  databaseRunning = false;
+  const response = await fetch(`${baseUrl}/api/articles/20261012/likes`);
+  assert.equal(response.status, 503);
+  assert.match(response.headers.get('cache-control'), /no-store/);
+  assert.deepEqual(await response.json(), { error: 'イイねを保存・取得できませんでした。もう一度お試しください。' });
+  assert.equal((await fetch(`${baseUrl}/blogs/20261012`)).status, 200);
+});
