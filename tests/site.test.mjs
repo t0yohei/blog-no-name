@@ -5,18 +5,22 @@ import { readdir } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
 import { setTimeout } from 'node:timers/promises';
 import { NetlifyDB } from '@netlify/database-dev';
+import { startExternalFeeds } from './helpers/external-feeds.mjs';
 
 const baseUrl = 'http://127.0.0.1:4322';
 let server;
 let serverLog = '';
 const database = new NetlifyDB({ logger() {} });
 let databaseRunning = false;
+let externalFeeds;
 
 before(async () => {
+  externalFeeds = await startExternalFeeds();
   const connectionString = await database.start();
   databaseRunning = true;
   await database.applyMigrations(new URL('../netlify/database/migrations/', import.meta.url).pathname);
   server = spawn(process.execPath, [
+    '--import', new URL('./helpers/external-feeds.mjs', import.meta.url).pathname,
     'node_modules/.bin/astro',
     'dev',
     '--host',
@@ -24,7 +28,7 @@ before(async () => {
     '--port',
     '4322',
     '--ignore-lock',
-  ], { env: { ...process.env, NETLIFY_DEV: 'true', NETLIFY_DB_URL: connectionString, NETLIFY_DB_DRIVER: 'server' } });
+  ], { env: { ...process.env, TEST_FEED_ORIGIN: externalFeeds.origin, NETLIFY_DEV: 'true', NETLIFY_DB_URL: connectionString, NETLIFY_DB_DRIVER: 'server' } });
   for (const stream of [server.stdout, server.stderr]) {
     stream.on('data', (chunk) => {
       serverLog = (serverLog + chunk).slice(-10000);
@@ -53,6 +57,37 @@ after(async () => {
     await exited;
   }
   if (databaseRunning) await database.stop();
+  if (externalFeeds) await externalFeeds.close();
+});
+
+test('external articles refresh at runtime without rebuilding, including RSS sources', async () => {
+  externalFeeds.state.requests.length = 0;
+  const initial = await (await fetch(baseUrl)).text();
+  assert.ok(initial.includes('Qiita runtime article'));
+  for (const host of ['zenn.dev', 'dev.to', 'speakerdeck.com']) {
+    assert.ok(initial.includes(`${host} runtime article`));
+    assert.ok(externalFeeds.state.requests.some(path => path.startsWith(`/${host}/`)));
+  }
+  try {
+    externalFeeds.state.title = 'Newly published Qiita article';
+    const updated = await (await fetch(baseUrl)).text();
+    assert.ok(updated.includes('Newly published Qiita article'));
+    assert.ok(!updated.includes('Qiita runtime article'));
+  } finally {
+    externalFeeds.state.title = 'Qiita runtime article';
+  }
+});
+
+test('upstream failures return an error instead of a cacheable incomplete index', async () => {
+  try {
+    externalFeeds.state.status = 503;
+    const response = await fetch(baseUrl);
+    assert.equal(response.status, 500);
+    assert.doesNotMatch(response.headers.get('netlify-cdn-cache-control') ?? '', /max-age=86400/);
+  } finally {
+    externalFeeds.state.status = 200;
+  }
+  assert.equal((await fetch(baseUrl)).status, 200);
 });
 
 test('article likes persist, deduplicate concurrent retries, and can be removed', async () => {

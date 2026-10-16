@@ -1,6 +1,11 @@
 import type { CollectionEntry } from 'astro:content';
+import type { LiveDataEntry } from 'astro';
+import type { Item as FeedItem } from '@ascorbic/feed-loader';
+import type { QiitaArticle } from './lib/qiita-live-loader';
 
-export type Post = CollectionEntry<'blogs' | 'slides' | 'qiitas' | 'zenns' | 'devTos'>;
+export type Post = CollectionEntry<'blogs'>
+  | (LiveDataEntry<FeedItem> & { collection: 'slides' | 'zenns' | 'devTos'; body?: string })
+  | (LiveDataEntry<QiitaArticle> & { collection: 'qiitas'; body?: string });
 
 export const parseDate = (post: Post) => {
   return 'pubdate' in post.data

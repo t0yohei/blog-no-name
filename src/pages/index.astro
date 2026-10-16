@@ -1,19 +1,21 @@
 ---
-// export const prerender = false;
 import HomeLayout from '../layouts/HomeLayout.astro';
 import Card from '../components/Card.astro';
 import '../styles/global.css';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, getLiveCollection } from 'astro:content';
 import { parseDate, type Post } from '../model';
 
 const buildPosts = async (): Promise<Post[]> => {
   const getAllPosts = async (): Promise<Post[]> => {
-    const blogs: CollectionEntry<'blogs'>[] = await getCollection('blogs');
-    const slides: CollectionEntry<'slides'>[] = await getCollection('slides');
-    const qiitas: CollectionEntry<'qiitas'>[] = await getCollection('qiitas');
-    const zenns: CollectionEntry<'zenns'>[] = await getCollection('zenns');
-    const devTos: CollectionEntry<'devTos'>[] = await getCollection('devTos');
-    return [...blogs, ...slides, ...qiitas, ...zenns, ...devTos];
+    const [blogs, ...externalPosts] = await Promise.all([
+      getCollection('blogs'),
+      ...(['slides', 'qiitas', 'zenns', 'devTos'] as const).map(async collection => {
+        const { entries, error } = await getLiveCollection(collection);
+        if (error) throw error;
+        return (entries ?? []).map(entry => ({ ...entry, collection })) as Post[];
+      }),
+    ]);
+    return [...blogs, ...externalPosts.flat()];
   };
 
   const sortPostsByDate = (posts: Post[]) => {
@@ -28,6 +30,7 @@ const buildPosts = async (): Promise<Post[]> => {
 };
 
 const posts = await buildPosts();
+Astro.cache.set({ maxAge: 86400, swr: 86400 });
 const recentPosts = posts.slice(0, 6);
 const postsByYear = new Map<string, Post[]>();
 for (const post of posts) {
