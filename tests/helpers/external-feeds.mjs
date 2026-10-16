@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 
-const hosts = new Set(['qiita.com', 'zenn.dev', 'dev.to', 'speakerdeck.com']);
+const hosts = new Set(['qiita.com', 'zenn.dev', 'dev.to', 'speakerdeck.com', 't0yohei.github.io']);
 
 // Preloaded only into the test server; the application keeps its production URLs.
 if (process.env.TEST_FEED_ORIGIN) {
@@ -28,6 +28,8 @@ export async function startExternalFeeds() {
       const host = request.url.split('/')[1];
       const articleUrl = host === 'zenn.dev'
         ? 'https://zenn.dev/t0yohei/articles/5aecc668e4e9c6'
+        : host === 't0yohei.github.io'
+        ? 'https://t0yohei.github.io/slides/rails-omae-datta-no-ka/'
         : `https://${host}/runtime-article`;
       response.writeHead(200, { 'Content-Type': 'application/rss+xml' });
       response.end(`<?xml version="1.0"?><rss version="2.0"><channel>

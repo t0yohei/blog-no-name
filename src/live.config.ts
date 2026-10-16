@@ -8,6 +8,7 @@ const feed = (url: string) => defineLiveCollection({
 
 export const collections = {
   slides: feed('https://speakerdeck.com/t0yohei.rss'),
+  slidev: feed('https://t0yohei.github.io/slides/feed.xml'),
   qiitas: defineLiveCollection({
     loader: qiitaLiveLoader('https://qiita.com/api/v2/users/t0yohei/items'),
   }),

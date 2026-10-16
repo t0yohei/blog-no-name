@@ -4,7 +4,7 @@ import type { Item as FeedItem } from '@ascorbic/feed-loader';
 import type { QiitaArticle } from './lib/qiita-live-loader';
 
 export type Post = CollectionEntry<'blogs'>
-  | (LiveDataEntry<FeedItem> & { collection: 'slides' | 'zenns' | 'devTos'; body?: string })
+  | (LiveDataEntry<FeedItem> & { collection: 'slides' | 'slidev' | 'zenns' | 'devTos'; body?: string })
   | (LiveDataEntry<QiitaArticle> & { collection: 'qiitas'; body?: string });
 
 export const parseDate = (post: Post) => {
