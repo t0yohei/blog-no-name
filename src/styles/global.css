@@ -1,58 +1,56 @@
 :root {
   color-scheme: light;
-  --background: #f1f5f9;
-  --surface: #ffffff;
-  --surface-hover: #f1f5f9;
-  --text: #202833;
-  --text-muted: #4b5967;
-  --link: #1e40af;
-  --link-visited: #6d28d9;
-  --border: #dde4eb;
-  --border-strong: #81909f;
-  --focus: #6d28d9;
-  --underline: #94a3b8;
-  --code-background: rgba(175, 184, 193, 0.2);
+  --background: #f7f5f0;
+  --surface: #fffefa;
+  --surface-hover: #e9eff2;
+  --text: #252d33;
+  --text-muted: #586670;
+  --link: #3b647f;
+  --link-visited: #53677a;
+  --border: #d8dedf;
+  --border-strong: #778995;
+  --focus: #3b647f;
+  --underline: var(--link);
+  --selection: #dce7ed;
+  --code-background: var(--surface-hover);
   --icon-background: transparent;
-  --accent: 124, 58, 237;
-  --accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, var(--surface) 60%);
+  --accent: 59, 100, 127;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --background: #10151d;
-  --surface: #1a2230;
-  --surface-hover: #263244;
-  --text: #e5eaf2;
-  --text-muted: #adb8c8;
-  --link: #9fc5ff;
-  --link-visited: #c4b5fd;
-  --border: #38465a;
-  --border-strong: #728097;
-  --focus: #c4b5fd;
-  --underline: #8392a8;
-  --code-background: rgba(175, 184, 193, 0.15);
-  --icon-background: #f1f5f9;
-  --accent: 196, 181, 253;
+  --background: #141b20;
+  --surface: #1e282f;
+  --surface-hover: #2a3943;
+  --text: #e9e7e0;
+  --text-muted: #adb9c0;
+  --link: #a2c5dc;
+  --link-visited: #b5bfce;
+  --border: #3c4b55;
+  --border-strong: #718797;
+  --focus: #a2c5dc;
+  --selection: #344f60;
+  --icon-background: #f7f5f0;
+  --accent: 162, 197, 220;
 }
 
 /* Follow the system preference when JavaScript is disabled or unavailable. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
-    --background: #10151d;
-    --surface: #1a2230;
-    --surface-hover: #263244;
-    --text: #e5eaf2;
-    --text-muted: #adb8c8;
-    --link: #9fc5ff;
-    --link-visited: #c4b5fd;
-    --border: #38465a;
-    --border-strong: #728097;
-    --focus: #c4b5fd;
-    --underline: #8392a8;
-    --code-background: rgba(175, 184, 193, 0.15);
-    --icon-background: #f1f5f9;
-    --accent: 196, 181, 253;
+    --background: #141b20;
+    --surface: #1e282f;
+    --surface-hover: #2a3943;
+    --text: #e9e7e0;
+    --text-muted: #adb9c0;
+    --link: #a2c5dc;
+    --link-visited: #b5bfce;
+    --border: #3c4b55;
+    --border-strong: #718797;
+    --focus: #a2c5dc;
+    --selection: #344f60;
+    --icon-background: #f7f5f0;
+    --accent: 162, 197, 220;
   }
 
   :root:not([data-theme]) .astro-code,
@@ -76,6 +74,7 @@ html {
 
 a {
   color: var(--link);
+  text-underline-offset: 0.2em;
 }
 
 a:visited {
@@ -85,6 +84,11 @@ a:visited {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
+}
+
+::selection {
+  color: var(--text);
+  background-color: var(--selection);
 }
 
 img {

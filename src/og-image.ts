@@ -14,8 +14,8 @@ export async function createOgImage(title: string, font: Buffer): Promise<Buffer
             display: 'flex',
             width: '100%',
             height: '100%',
-            backgroundColor: '#f1f5f9',
-            color: '#152536',
+            backgroundColor: '#f7f5f0',
+            color: '#252d33',
             fontFamily: 'BIZ UDPGothic',
             fontWeight: 700,
             borderTop: '12px solid #3b647f',
@@ -47,7 +47,7 @@ export async function createOgImage(title: string, font: Buffer): Promise<Buffer
             {
               type: 'div',
               props: {
-                style: { position: 'absolute', bottom: 56, left: 72, fontSize: 24, color: '#65717b' },
+                style: { position: 'absolute', bottom: 56, left: 72, fontSize: 24, color: '#586670' },
                 children: 't0yohei / blog-no-name.com',
               },
             },
