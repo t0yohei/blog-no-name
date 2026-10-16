@@ -78,6 +78,11 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
 </HomeLayout>
 
 <style>
+  main {
+    max-width: 1120px;
+    padding: 42px 56px 56px;
+  }
+
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -95,20 +100,20 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 8px 16px;
-    margin: 24px 0 16px;
+    margin: 0 0 24px;
   }
   h2 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.375rem;
   }
   .section-heading a {
     padding: 8px 0;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     text-underline-offset: 0.2em;
   }
   .article-archive {
-    margin-top: 48px;
-    padding-top: 32px;
+    margin-top: 52px;
+    padding-top: 28px;
     border-top: 1px solid var(--border);
   }
   .year-links {
@@ -157,9 +162,38 @@ const yearLabel = (year: string) => (year === 'unknown' ? '公開年不明' : `$
   }
   .link-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 335px), 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
     padding: 0;
     margin: 0;
+  }
+
+  @media (max-width: 999px) {
+    .link-card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 650px) {
+    main {
+      padding: 30px 24px 40px;
+    }
+
+    h2 {
+      font-size: 1.1875rem;
+    }
+
+    .section-heading {
+      margin-bottom: 16px;
+    }
+
+    .link-card-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .article-archive {
+      margin-top: 36px;
+    }
   }
 </style>

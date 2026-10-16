@@ -1,8 +1,6 @@
 ---
 import { parseDate, parseDescription, type Post } from '../model';
 import { Icon } from 'astro-icon/components';
-import { Image } from 'astro:assets';
-import QiitaIcon from '../icons/qiita.png';
 
 export interface Props {
   post: Post;
@@ -22,11 +20,6 @@ const sourceName = {
   devTos: 'dev.to',
 }[post.collection];
 
-const buildPreview = (text: string | undefined | null, size: number = 50): string => {
-  if (!text) return '';
-  return text.length > size ? `${text.substring(0, size)}...` : text;
-};
-
 const getPostHref = (): string => {
   return post.collection === 'blogs' ? `blogs/${post.id}` : (post.data.url ?? '');
 };
@@ -45,14 +38,6 @@ const getLinkAttributes = () => {
   <a {...getLinkAttributes()}>
     <div class="card-meta">
       <span class="icon-container">
-        {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" aria-hidden="true" />}
-        {post.collection === 'slidev' && <Icon class="icon" name="mdi:presentation" aria-hidden="true" />}
-        {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="" class="icon" />}
-        {post.collection === 'zenns' && <Icon class="icon" name="zenn" aria-hidden="true" />}
-        {post.collection === 'devTos' && <Icon class="icon" name="devTo" aria-hidden="true" />}
-        {!['slides', 'slidev', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
-          <Icon size={20} class="icon" name="mdi:file-document" aria-hidden="true" />
-        )}
         <span class="source-label">{sourceName}</span>
       </span>
       <span class="link-icon-container">
@@ -63,8 +48,8 @@ const getLinkAttributes = () => {
         )}
       </span>
     </div>
-    <Heading class="card-title">{compact ? post.data.title : buildPreview(post.data.title, 80)}</Heading>
-    {!compact && <p class="blog-body">{buildPreview(parseDescription(post))}</p>}
+    <Heading class="card-title">{post.data.title}</Heading>
+    {!compact && <p class="blog-body">{parseDescription(post)}</p>}
     <p class="pub-date">{parseDate(post)?.toISOString().slice(0, 10)}</p>
   </a>
 </li>
@@ -74,7 +59,7 @@ const getLinkAttributes = () => {
     display: flex;
     background-color: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 0.75rem;
+    border-radius: 14px;
     position: relative;
   }
 
@@ -83,21 +68,23 @@ const getLinkAttributes = () => {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    min-height: 310px;
+    padding: 24px;
     text-decoration: none;
-    line-height: 1.4;
+    line-height: 1.75;
     border-radius: inherit;
     color: var(--text);
     background-color: var(--surface);
   }
   .card-title {
-    margin: 0;
-    font-size: 1.25rem;
-    padding: 0.5rem 0;
+    margin: 18px 0 12px;
+    font-size: 1.1875rem;
+    letter-spacing: -0.015em;
+    overflow-wrap: anywhere;
   }
 
   .link-card:not(.compact) .card-title {
-    text-wrap: balance;
+    text-wrap: pretty;
   }
 
   p {
@@ -106,8 +93,12 @@ const getLinkAttributes = () => {
   }
 
   .blog-body {
-    font-size: 1.1rem;
-    padding: 0 0 16px;
+    font-size: 0.8125rem;
+    line-height: 1.9;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .card-meta {
@@ -124,7 +115,10 @@ const getLinkAttributes = () => {
 
   .pub-date {
     margin-top: auto;
-    align-self: flex-end;
+    align-self: flex-start;
+    padding-top: 22px;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
   }
 
   .icon-container {
@@ -133,7 +127,7 @@ const getLinkAttributes = () => {
 
   .source-label {
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
   }
 
   .link-card > a:is(:hover, :focus-visible) {
@@ -141,8 +135,8 @@ const getLinkAttributes = () => {
   }
 
   .icon {
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
     padding: 0;
     margin: 0;
   }
@@ -179,6 +173,7 @@ const getLinkAttributes = () => {
 
   .compact .card-title {
     grid-area: title;
+    margin: 0;
     padding: 0;
     font-size: 1.125rem;
     line-height: 1.6;
@@ -188,6 +183,7 @@ const getLinkAttributes = () => {
   .compact .pub-date {
     grid-area: date;
     margin: 0;
+    padding-top: 0;
     align-self: center;
     justify-self: start;
     font-size: 0.875rem;
@@ -200,8 +196,22 @@ const getLinkAttributes = () => {
     gap: 8px;
   }
 
-  .compact .icon-container .icon {
-    display: none;
+  @media (max-width: 650px) {
+    .link-card:not(.compact) > a {
+      min-height: 0;
+    }
+
+    .link-card:not(.compact) .card-title {
+      margin-top: 14px;
+    }
+
+    .blog-body {
+      -webkit-line-clamp: 2;
+    }
+
+    .link-card:not(.compact) .pub-date {
+      padding-top: 16px;
+    }
   }
 
   @media (max-width: 639px) {

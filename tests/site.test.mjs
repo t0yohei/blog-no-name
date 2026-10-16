@@ -223,7 +223,10 @@ test('article descriptions use an explicit summary or plain text from existing M
   assert.ok(article.includes(`name="description" content="${summary}"`));
   assert.ok(article.includes(`property="og:description" content="${summary}"`));
   const index = await (await fetch(baseUrl)).text();
-  assert.ok(index.includes(`${summary.slice(0, 50)}...`));
+  const localCard = [...index.matchAll(/<li\b[^>]*class="link-card"[^>]*>([\s\S]*?)<\/li>/g)]
+    .map(([, card]) => card)
+    .find(card => card.includes('href="blogs/20261012"'));
+  assert.ok(localCard.includes(summary), 'Keep the complete summary; clamp its visible lines with CSS');
   const sttCard = [...index.matchAll(/<li\b[^>]*class="link-card"[^>]*>([\s\S]*?)<\/li>/g)]
     .map(([, card]) => card)
     .find((card) => card.includes('https://zenn.dev/t0yohei/articles/5aecc668e4e9c6'));
