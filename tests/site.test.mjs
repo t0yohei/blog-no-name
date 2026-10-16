@@ -64,7 +64,7 @@ test('external articles refresh at runtime without rebuilding, including RSS sou
   externalFeeds.state.requests.length = 0;
   const initial = await (await fetch(baseUrl)).text();
   assert.ok(initial.includes('Qiita runtime article'));
-  for (const host of ['zenn.dev', 'dev.to', 'speakerdeck.com']) {
+  for (const host of ['zenn.dev', 'dev.to', 'speakerdeck.com', 't0yohei.github.io']) {
     assert.ok(initial.includes(`${host} runtime article`));
     assert.ok(externalFeeds.state.requests.some(path => path.startsWith(`/${host}/`)));
   }
@@ -88,6 +88,20 @@ test('upstream failures return an error instead of a cacheable incomplete index'
     externalFeeds.state.status = 200;
   }
   assert.equal((await fetch(baseUrl)).status, 200);
+});
+
+test('Slidev entries link directly to the public deck and display their source and publication date', async () => {
+  const html = await (await fetch(baseUrl)).text();
+  const cards = [...html.matchAll(/<li\b[^>]*class="link-card(?:\s[^"]*)?"[^>]*>([\s\S]*?)<\/li>/g)]
+    .map(([, card]) => card)
+    .filter(card => card.includes('https://t0yohei.github.io/slides/rails-omae-datta-no-ka/'));
+  assert.equal(cards.length, 2, 'The deck appears in recent posts and the yearly archive');
+  for (const card of cards) {
+    assert.match(card, /href="https:\/\/t0yohei\.github\.io\/slides\/rails-omae-datta-no-ka\/"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/);
+    assert.match(card, /class="source-label"[^>]*>\s*Slidev\s*<\/span>/);
+    assert.match(card, /class="pub-date"[^>]*>\s*2026-10-15\s*<\/p>/);
+  }
+  assert.ok(externalFeeds.state.requests.includes('/t0yohei.github.io/slides/feed.xml'));
 });
 
 test('article likes persist, deduplicate concurrent retries, and can be removed', async () => {
@@ -253,7 +267,7 @@ test('the index offers recent posts and a complete chronological yearly archive'
   const cardsIn = (fragment) =>
     [...fragment.matchAll(/<li\b[^>]*class="link-card(?:\s[^"]*)?"[^>]*>([\s\S]*?)<\/li>/g)].map(([, card]) => {
       const [, href, attributes] = card.match(/<a\b[^>]*href="([^"]+)"([^>]*)>/);
-      assert.match(card, /class="source-label"[^>]*>\s*(Blog|Qiita|Zenn|dev\.to|Speaker Deck)\s*<\/span>/);
+      assert.match(card, /class="source-label"[^>]*>\s*(Blog|Qiita|Zenn|dev\.to|Speaker Deck|Slidev)\s*<\/span>/);
       if (href.startsWith('blogs/')) {
         assert.doesNotMatch(attributes, /target=/);
       } else {

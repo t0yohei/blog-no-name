@@ -16,6 +16,7 @@ const Heading = headingLevel === 4 ? 'h4' : 'h3';
 const sourceName = {
   blogs: 'Blog',
   slides: 'Speaker Deck',
+  slidev: 'Slidev',
   qiitas: 'Qiita',
   zenns: 'Zenn',
   devTos: 'dev.to',
@@ -45,10 +46,11 @@ const getLinkAttributes = () => {
     <div class="card-meta">
       <span class="icon-container">
         {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" aria-hidden="true" />}
+        {post.collection === 'slidev' && <Icon class="icon" name="mdi:presentation" aria-hidden="true" />}
         {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="" class="icon" />}
         {post.collection === 'zenns' && <Icon class="icon" name="zenn" aria-hidden="true" />}
         {post.collection === 'devTos' && <Icon class="icon" name="devTo" aria-hidden="true" />}
-        {!['slides', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
+        {!['slides', 'slidev', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
           <Icon size={20} class="icon" name="mdi:file-document" aria-hidden="true" />
         )}
         <span class="source-label">{sourceName}</span>

@@ -9,7 +9,7 @@ const buildPosts = async (): Promise<Post[]> => {
   const getAllPosts = async (): Promise<Post[]> => {
     const [blogs, ...externalPosts] = await Promise.all([
       getCollection('blogs'),
-      ...(['slides', 'qiitas', 'zenns', 'devTos'] as const).map(async collection => {
+      ...(['slides', 'slidev', 'qiitas', 'zenns', 'devTos'] as const).map(async collection => {
         const { entries, error } = await getLiveCollection(collection);
         if (error) throw error;
         return (entries ?? []).map(entry => ({ ...entry, collection })) as Post[];
