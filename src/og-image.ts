@@ -14,7 +14,7 @@ export async function createOgImage(title: string, font: Buffer): Promise<Buffer
             display: 'flex',
             width: '100%',
             height: '100%',
-            backgroundColor: '#f7f5f0',
+            backgroundColor: '#f1f5f9',
             color: '#252d33',
             fontFamily: 'BIZ UDPGothic',
             fontWeight: 700,
