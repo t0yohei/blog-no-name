@@ -1,6 +1,8 @@
 ---
 import { parseDate, parseDescription, type Post } from '../model';
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import QiitaIcon from '../icons/qiita.png';
 
 export interface Props {
   post: Post;
@@ -38,6 +40,14 @@ const getLinkAttributes = () => {
   <a {...getLinkAttributes()}>
     <div class="card-meta">
       <span class="icon-container">
+        {post.collection === 'slides' && <Icon class="icon" name="speakerdeck" aria-hidden="true" />}
+        {post.collection === 'slidev' && <Icon class="icon" name="mdi:presentation" aria-hidden="true" />}
+        {post.collection === 'qiitas' && <Image src={QiitaIcon} alt="" class="icon" />}
+        {post.collection === 'zenns' && <Icon class="icon" name="zenn" aria-hidden="true" />}
+        {post.collection === 'devTos' && <Icon class="icon" name="devTo" aria-hidden="true" />}
+        {!['slides', 'slidev', 'qiitas', 'zenns', 'devTos'].includes(post.collection) && (
+          <Icon size={20} class="icon" name="mdi:file-document" aria-hidden="true" />
+        )}
         <span class="source-label">{sourceName}</span>
       </span>
       <span class="link-icon-container">
@@ -125,6 +135,11 @@ const getLinkAttributes = () => {
     gap: 8px;
   }
 
+  .icon-container .icon {
+    width: 20px;
+    height: 20px;
+  }
+
   .source-label {
     color: var(--text-muted);
     font-size: 0.75rem;
@@ -194,6 +209,10 @@ const getLinkAttributes = () => {
     grid-area: meta;
     justify-self: end;
     gap: 8px;
+  }
+
+  .compact .icon-container .icon {
+    display: none;
   }
 
   @media (max-width: 650px) {
