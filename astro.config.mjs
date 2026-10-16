@@ -5,6 +5,7 @@ import vue from '@astrojs/vue';
 
 // https://astro.build/config
 import netlify from '@astrojs/netlify';
+import { cacheNetlify } from '@astrojs/netlify/cache';
 
 import icon from 'astro-icon';
 
@@ -20,4 +21,5 @@ export default defineConfig({
   },
   output: 'server',
   adapter: netlify(),
+  cache: { provider: cacheNetlify() },
 });
