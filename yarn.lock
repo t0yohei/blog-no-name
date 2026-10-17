@@ -1279,6 +1279,7 @@ __metadata:
     "@types/node": "npm:^24"
     astro: "npm:^7.3.8"
     astro-icon: "npm:^1.2.0"
+    astro-qiita-loader: "npm:^0.2.0"
     prettier: "npm:^3.9.10"
     prettier-plugin-astro: "npm:^1.1.1"
     satori: "npm:^0.51.0"
@@ -4111,6 +4112,15 @@ __metadata:
     "@iconify/types": "npm:^2.0.0"
     "@iconify/utils": "npm:^3.1.4"
   checksum: 10c0/878167703176df872da4f6966ad71b37701416ecd5b77c6cfa4f56de7c0abf84d9e4ba442b379138b849d52ad4365bb3d5c5035f4b74b5993535034035d83ea7
+  languageName: node
+  linkType: hard
+
+"astro-qiita-loader@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "astro-qiita-loader@npm:0.2.0"
+  peerDependencies:
+    astro: ^5.0.0 || ^6.0.0 || ^7.0.0
+  checksum: 10c0/b0de1e767cfa665e6f1dea2639c5be5d5208f950d3ad491aae82bd249c4ef3dd29880803273f04ca0692f8d841df69d47eaf67b37245906f1077c787ad769670
   languageName: node
   linkType: hard
 
