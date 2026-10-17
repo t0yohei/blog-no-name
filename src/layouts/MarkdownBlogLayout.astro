@@ -64,9 +64,21 @@ const structuredData = {
   </head>
   <body>
     <Header />
+    <nav class="article-back-nav" aria-label="記事一覧">
+      <a href="/">
+        <Icon name="mdi:arrow-left" size={16} aria-hidden="true" />
+        記事一覧へ
+      </a>
+    </nav>
     <main transition:animate={slide({ duration: '0.5s' })}>
-      <h1>{entry.data.title}</h1>
-      <p>投稿日: {entry.data.pubdate.toISOString().slice(0, 10)}</p>
+      <header class="article-heading">
+        <p class="article-meta">
+          <span>Blog</span>
+          <time datetime={entry.data.pubdate.toISOString()}>{entry.data.pubdate.toISOString().slice(0, 10)}</time>
+        </p>
+        <h1>{entry.data.title}</h1>
+        <p class="article-description">{preview}</p>
+      </header>
       <slot />
       <footer>
         <ArticleLike articleId={entry.id} />
@@ -144,24 +156,72 @@ const structuredData = {
     </script>
     <style>
       main {
-        max-width: 52rem;
+        width: calc(100% - 112px);
+        max-width: 860px;
+        padding: 42px 52px;
+        line-height: 2.15;
         background-color: var(--surface);
-        margin-top: 40px;
-        border-radius: 8px;
+        border-radius: 16px;
+      }
+
+      .article-back-nav {
+        width: calc(100% - 112px);
+        max-width: 860px;
+        margin: 30px auto 34px;
+      }
+
+      .article-back-nav a {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        font-size: 0.75rem;
+        text-decoration: none;
+      }
+
+      .article-heading {
+        margin-bottom: 40px;
+        padding-bottom: 34px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .article-meta {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin: 0 0 22px;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+      }
+
+      .article-meta span {
+        color: var(--link);
+      }
+
+      .article-description {
+        margin: 24px 0 0;
+        color: var(--text-muted);
+        font-size: 0.9375rem;
+        line-height: 2;
+      }
+
+      main > :global(p) {
+        margin-block: 0 25px;
       }
 
       h1 {
-        font-size: 32px;
+        font-size: 31px;
+        letter-spacing: -0.025em;
         overflow-wrap: anywhere;
         text-wrap: balance;
         word-break: auto-phrase;
-        line-height: 1.4;
+        line-height: 1.75;
       }
 
       main > :global(h2),
       main > :global(h3) {
-        margin-block: 2rem 0.75rem;
-        line-height: 1.4;
+        margin-block: 54px 20px;
+        line-height: 1.7;
         text-wrap: balance;
       }
 
@@ -206,11 +266,6 @@ const structuredData = {
 
       main :global(.code-scroll-hint:not([hidden]) + pre) {
         margin-top: 0;
-      }
-
-      p {
-        color: var(--text-muted);
-        text-align: right;
       }
 
       footer {
@@ -261,9 +316,13 @@ const structuredData = {
       }
 
       time {
-        margin-top: auto;
         color: var(--text-muted);
         font-size: 0.8125rem;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .article-link time {
+        margin-top: auto;
       }
 
       .article-link:is(:hover, :focus-visible) {
@@ -290,9 +349,43 @@ const structuredData = {
         outline-offset: 4px;
       }
 
-      @media (max-width: 639px) {
+      @media (max-width: 650px) {
+        main {
+          width: 100%;
+          padding: 0 24px 40px;
+          background-color: transparent;
+          border-radius: 0;
+          font-size: 0.9375rem;
+          line-height: 2.1;
+        }
+
+        .article-back-nav {
+          width: 100%;
+          margin: 22px auto 26px;
+          padding-inline: 24px;
+        }
+
+        .article-heading {
+          margin-bottom: 30px;
+          padding-bottom: 26px;
+        }
+
+        .article-meta {
+          margin-bottom: 18px;
+        }
+
+        .article-description {
+          font-size: 0.875rem;
+        }
+
         h1 {
-          font-size: clamp(1.5rem, 7vw, 1.75rem);
+          font-size: 26px;
+          line-height: 1.85;
+        }
+
+        main > :global(h2),
+        main > :global(h3) {
+          margin-top: 42px;
         }
 
         .article-navigation {
