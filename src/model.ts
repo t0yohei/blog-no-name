@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { LiveDataEntry } from 'astro';
 import type { Item as FeedItem } from '@ascorbic/feed-loader';
-import type { QiitaArticle } from './lib/qiita-live-loader';
+import type { Item as QiitaArticle } from 'astro-qiita-loader/live';
 
 export type Post = CollectionEntry<'blogs'>
   | (LiveDataEntry<FeedItem> & { collection: 'slides' | 'slidev' | 'zenns' | 'devTos'; body?: string })

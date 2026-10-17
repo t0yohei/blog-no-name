@@ -23,6 +23,16 @@ export async function startExternalFeeds() {
       response.end(JSON.stringify([{
         id: 'runtime-article', title: state.title, body: 'Runtime article description',
         url: 'https://qiita.com/t0yohei/items/runtime-article', created_at: '2026-10-16T00:00:00Z',
+        updated_at: '2026-10-16T00:00:00Z', rendered_body: '<p>Runtime article description</p>',
+        coediting: false, comments_count: 0, group: null, likes_count: 0, private: false,
+        reactions_count: 0, stocks_count: 0, tags: [], page_views_count: null,
+        team_membership: null, organization_url_name: null, slide: false,
+        user: {
+          id: 't0yohei', name: 'Test user', permanent_id: 1, profile_image_url: 'https://example.com/avatar.png',
+          description: null, facebook_id: null, followees_count: 0, followers_count: 0,
+          github_login_name: null, items_count: 1, linkedin_id: null, location: null,
+          organization: null, team_only: false, twitter_screen_name: null, website_url: null,
+        },
       }]));
     } else {
       const host = request.url.split('/')[1];
